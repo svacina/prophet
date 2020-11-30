@@ -26,7 +26,7 @@ public class ProcessFiles {
                     // METHOD
                     MsVisitor.visitMethods(file, role);
                     // METHOD CALLS
-//              MsVisitor.visitMethodCalls(file);
+              MsVisitor.visitMethodCalls(file);
                 }
                 if (path.contains("Repository")){
                     // visitClassDeclaration

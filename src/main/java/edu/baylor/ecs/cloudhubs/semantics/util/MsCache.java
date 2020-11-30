@@ -3,6 +3,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsClass;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsMethod;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsMethodCall;
+import edu.baylor.ecs.cloudhubs.semantics.entity.inconsistencies.MsInconsistencies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,13 @@ public class MsCache {
     private static List<MsClass> msClassList;
     private static List<MsMethod> msMethodList;
     private static List<MsMethodCall> msMethodCallList;
+    private static MsInconsistencies msInconsistencies;
 
     public static void init(){
         msClassList = new ArrayList<>();
         msMethodList = new ArrayList<>();
         msMethodCallList = new ArrayList<>();
+        msInconsistencies = new MsInconsistencies();
     }
 
     public static void addMsClass(MsClass msClass) {
@@ -33,4 +36,7 @@ public class MsCache {
     public static void print(){
         msClassList.forEach(n -> System.out.println(n.toString()));
     }
+
+
+
 }

@@ -7,12 +7,13 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.MethodCallExpr;
-import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
+import com.github.javaparser.metamodel.BinaryExprMetaModel;
+import edu.baylor.ecs.cloudhubs.semantics.checkers.controller.RequestHeaderChecker;
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 
 import java.io.File;
@@ -62,6 +63,12 @@ public class MsVisitor {
                 @Override
                 public void visit(MethodDeclaration n, Object arg) {
                     super.visit(n, arg);
+                    if (role.equals(MsClassRoles.CONTROLLER)) {
+                        // (1) Missing '@RequestHeader' annotation (method)
+                        RequestHeaderChecker.check(n);
+
+                    }
+
                     MsMethod msMethod = new MsMethod();
                     msMethod.setReturnType(n.getTypeAsString());
                     msMethod.setMethodName(n.getNameAsString());
@@ -140,9 +147,38 @@ public class MsVisitor {
 
                                 // here try to print the n
                                 visitNode(file, n);
+                                NodeList<Expression> expressionNodeList = n.getArguments();
+                                expressionNodeList.forEach(e -> {
+                                    if  (e instanceof BinaryExpr) {
+                                        System.out.println(e.toString());
+                                        BinaryExpr be = (BinaryExpr) e;
+                                        BinaryExprMetaModel me = be.getMetaModel();
+                                        // the URL
+                                        System.out.println(me.toString());
+                                    }
+                                    if (e instanceof FieldAccessExpr) {
+                                        FieldAccessExpr f = (FieldAccessExpr) e;
+                                        // GET, POST, etc.
+                                        System.out.println(f.getName().toString());
 
-
-
+                                    }
+                                    if (e instanceof ObjectCreationExpr) {
+                                        ObjectCreationExpr oce = (ObjectCreationExpr) e;
+                                        ClassOrInterfaceType paramType = oce.getType();
+                                        Optional<NodeList<Type>> optParamTypes = paramType.getTypeArguments();
+                                        optParamTypes.ifPresent(types -> types.forEach(p -> {
+                                            if (p instanceof ClassOrInterfaceType) {
+                                                ClassOrInterfaceType tp = (ClassOrInterfaceType) p;
+                                                if (tp.getTypeArguments().isPresent()) {
+                                                    tp.getTypeArguments().get().forEach(ta -> {
+                                                        // return type
+                                                        System.out.println(ta.toString());
+                                                    });
+                                                }
+                                            }
+                                        }));
+                                    }
+                                });
                                 msMethodCall.setCalledServiceId(name);
                                 Optional<Node> parentNode = n.getParentNode();
                                 if (parentNode.isPresent()) {
