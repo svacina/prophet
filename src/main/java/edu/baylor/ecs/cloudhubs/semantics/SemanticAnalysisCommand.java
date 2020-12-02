@@ -15,7 +15,7 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
     public int run(String... args) throws Exception {
         //print
         final String name = args.length > 0 ? String.join(" ", args) : "";
-        System.out.println(name);
+        // System.out.println(name);
         ProcessFiles.run(args);
         return 0;
     }

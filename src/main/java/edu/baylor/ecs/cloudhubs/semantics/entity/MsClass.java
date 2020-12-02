@@ -22,7 +22,7 @@ public class MsClass {
 
     @Override
     public String toString() {
-        return "**class** " + this.getRole() + " " + this.getClassId();
+        return this.getClassId() + " [" + this.getRole() + "]";
     }
 
 }

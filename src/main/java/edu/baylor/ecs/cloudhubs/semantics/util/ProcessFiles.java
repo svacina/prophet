@@ -22,11 +22,11 @@ public class ProcessFiles {
             if (role != null) {
                 if (role.equals(MsClassRoles.CONTROLLER) || role.equals(MsClassRoles.SERVICE)) {
                     // CLASS
-//                MsVisitor.visitClass(file);
+                    MsVisitor.visitClass(file);
                     // METHOD
                     MsVisitor.visitMethods(file, role);
                     // METHOD CALLS
-              MsVisitor.visitMethodCalls(file);
+                    MsVisitor.visitMethodCalls(file);
                 }
                 if (path.contains("Repository")){
                     // visitClassDeclaration

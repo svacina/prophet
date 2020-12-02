@@ -1,5 +1,8 @@
 package edu.baylor.ecs.cloudhubs.semantics.entity;
 
+import lombok.Data;
+
+@Data
 public class MsMethodCall {
     private String id;
     private String packageName;
@@ -9,6 +12,7 @@ public class MsMethodCall {
     private String calledMethodName;
     private String calledMethodId;
     private String calledServiceId;
+    private String statementDeclaration;
 
     public MsMethodCall() {
     }
@@ -43,5 +47,23 @@ public class MsMethodCall {
 
     public void setCalledServiceId(String calledServiceId) {
         this.calledServiceId = calledServiceId;
+    }
+
+    public void setMsParentMethod(MsParentMethod msParentMethod) {
+        this.packageName = msParentMethod.getPackageName();
+        this.className = msParentMethod.getClassName();
+        this.methodName = msParentMethod.getMethodName();
+    }
+
+    @Override
+    public String toString() {
+        return "[L" + lineNumber + "] " +
+                packageName + '.' +
+                className + '.' +
+                methodName +
+                " -> " +
+                calledServiceId + '.' +
+                calledMethodName + '.'
+        ;
     }
 }

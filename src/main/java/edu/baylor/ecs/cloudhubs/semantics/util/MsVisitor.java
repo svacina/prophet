@@ -15,6 +15,8 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.javaparser.metamodel.BinaryExprMetaModel;
 import edu.baylor.ecs.cloudhubs.semantics.checkers.controller.RequestHeaderChecker;
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsParentMethodFactory;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,11 +45,16 @@ public class MsVisitor {
                         }
                         if (annotationExpr.getNameAsString().equals("RestController")){
                             msClass.setRole(MsClassRoles.CONTROLLER);
+                            // get annotation request mapping and value
                         }
                         if (annotationExpr.getNameAsString().equals("Repository")){
                             msClass.setRole(MsClassRoles.REPOSITORY);
                         }
                     }
+                    if (nl.size() == 0 && n.getNameAsString().contains("Service")) {
+                        msClass.setRole(MsClassRoles.SERVICE_INTERFACE);
+                    }
+
                     msClass.setIds();
                     MsCache.addMsClass(msClass);
                 }
@@ -97,7 +104,7 @@ public class MsVisitor {
                     MsCache.addMsMethod(msMethod);
                 }
             }.visit(StaticJavaParser.parse(file), null);
-            System.out.println(); // empty line
+            // System.out.println(); // empty line
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -129,168 +136,42 @@ public class MsVisitor {
                 @Override
                 public void visit(MethodCallExpr n, Object arg) {
                     super.visit(n, arg);
-                    MsMethodCall msMethodCall = new MsMethodCall();
-                    // Line number
-                    System.out.println(" [L " + n.getBegin().get().line + "] " + n);
-                    msMethodCall.setLineNumber(n.getBegin().get().line);
+//                    System.out.println(" [L " + n.getBegin().get().line + "] " + n);
                     Optional<Expression> scope = n.getScope();
                     if (scope.isPresent()) {
                         if (scope.get() instanceof  NameExpr) {
+                            // get common properties
+                            int lineNumber = n.getBegin().get().line;
+                            // decide between service / restTemplate
                             NameExpr fae = scope.get().asNameExpr();
                             String name = fae.getNameAsString();
                             if (name.equals("service")) {
+                                // service is being called
+                                MsMethodCall msMethodCall = new MsMethodCall();
+
+                                msMethodCall.setLineNumber(lineNumber);
+                                msMethodCall.setStatementDeclaration(n.toString());
+                                msMethodCall.setMsParentMethod(MsParentMethodFactory.getMsParentMethod(n));
                                 msMethodCall.setCalledServiceId(name);
-                                //
+                                MethodCallExpr methodCallExpr = (MethodCallExpr) fae.getParentNode().get();
+                                msMethodCall.setCalledMethodName(methodCallExpr.getNameAsString());
+                                // register method call to cache
+                                MsCache.addMsMethodCall(msMethodCall);
+                            } else if (name.equals("restTemplate")) {
+                                // rest template is being called
+                                MsRestCall msRestCall = MsRestCallFactory.getMsRestCall(n);
+                                msRestCall.setLineNumber(lineNumber);
+                                msRestCall.setMsParentMethod(MsParentMethodFactory.getMsParentMethod(n));
+                                MsCache.addMsRestMethodCall(msRestCall);
                             }
-
-                            if (name.equals("restTemplate")) {
-
-                                // here try to print the n
-                                visitNode(file, n);
-                                NodeList<Expression> expressionNodeList = n.getArguments();
-                                expressionNodeList.forEach(e -> {
-                                    if  (e instanceof BinaryExpr) {
-                                        System.out.println(e.toString());
-                                        BinaryExpr be = (BinaryExpr) e;
-                                        BinaryExprMetaModel me = be.getMetaModel();
-                                        // the URL
-                                        System.out.println(me.toString());
-                                    }
-                                    if (e instanceof FieldAccessExpr) {
-                                        FieldAccessExpr f = (FieldAccessExpr) e;
-                                        // GET, POST, etc.
-                                        System.out.println(f.getName().toString());
-
-                                    }
-                                    if (e instanceof ObjectCreationExpr) {
-                                        ObjectCreationExpr oce = (ObjectCreationExpr) e;
-                                        ClassOrInterfaceType paramType = oce.getType();
-                                        Optional<NodeList<Type>> optParamTypes = paramType.getTypeArguments();
-                                        optParamTypes.ifPresent(types -> types.forEach(p -> {
-                                            if (p instanceof ClassOrInterfaceType) {
-                                                ClassOrInterfaceType tp = (ClassOrInterfaceType) p;
-                                                if (tp.getTypeArguments().isPresent()) {
-                                                    tp.getTypeArguments().get().forEach(ta -> {
-                                                        // return type
-                                                        System.out.println(ta.toString());
-                                                    });
-                                                }
-                                            }
-                                        }));
-                                    }
-                                });
-                                msMethodCall.setCalledServiceId(name);
-                                Optional<Node> parentNode = n.getParentNode();
-                                if (parentNode.isPresent()) {
-                                    if (parentNode.get() instanceof VariableDeclarator) {
-                                        VariableDeclarator vd = (VariableDeclarator) parentNode.get();
-                                        // getLine
-                                        vd.getTokenRange();
-                                        // get
-                                        Optional<Expression> oe = vd.getInitializer();
-                                        // if present, if instance of
-                                        MethodCallExpr mce = (MethodCallExpr) oe.get();
-
-                                    }
-                                }
-                                //
-                            }
-
-
-                                // ** find method, class, package
-                            Optional<Node> parentNode = n.getParentNode();
-
-                            if (parentNode.isPresent()) {
-                                for (Node ln: parentNode.get().getChildNodes()){
-                                    if (ln instanceof MethodCallExpr) {
-                                        MethodCallExpr mce = (MethodCallExpr) ln;
-                                        System.out.println(mce.getName().getIdentifier());
-                                    }
-                                }
-                            }
-
-                            // Find Method
-                            while (parentNode.isPresent() && !(parentNode.get() instanceof MethodDeclaration)) {
-                                parentNode = parentNode.get().getParentNode();
-                            }
-                            if (parentNode.isPresent()) {
-                                // Set Method
-                                MethodDeclaration md = (MethodDeclaration) parentNode.get();
-                                System.out.println(md.getName().getIdentifier());
-                                msMethodCall.setMethodName(md.getName().getIdentifier());
-                                //Find Class
-                                while (parentNode.isPresent() && !(parentNode.get() instanceof ClassOrInterfaceDeclaration)) {
-                                    parentNode = parentNode.get().getParentNode();
-                                }
-                                if (parentNode.isPresent()) {
-                                    // Set Class
-                                    ClassOrInterfaceDeclaration cl = (ClassOrInterfaceDeclaration) parentNode.get();
-                                    System.out.println(cl.getName().getIdentifier());
-                                    msMethodCall.setClassName(cl.getName().getIdentifier());
-                                    // Find Package
-                                    parentNode = parentNode.get().getParentNode();
-                                    if (parentNode.isPresent()) {
-                                        // Set Package
-                                        CompilationUnit cu = (CompilationUnit) parentNode.get();
-                                        Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
-                                        if (pd.isPresent()) {
-                                            System.out.println(pd.get().getName());
-                                            msMethodCall.setPackageName(pd.get().getNameAsString());
-                                        }
-                                    }
-                                }
-                            }
-                            MsCache.addMsMethodCall(msMethodCall);
-                            // ** end method, class, package
                         }
                     }
-
-
-
                 }
             }.visit(StaticJavaParser.parse(file), null);
-            System.out.println(); // empty line
+            // System.out.println(); // empty line
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-
-
-    // field
-
-//            try {
-//                new VoidVisitorAdapter<Object>() {
-//                    @Override
-//                    public void visit(FieldDeclaration n, Object arg) {
-//                        super.visit(n, arg);
-//                        MsField msField = new MsField();
-//                        VariableDeclarator vd = n.getVariables().get(0);
-//                        vd.getName().getIdentifier();
-//                        Optional<Node> parentNode = n.getParentNode();
-//                        while (parentNode.isPresent() && !(parentNode.get() instanceof ClassOrInterfaceDeclaration)) {
-//                            parentNode = parentNode.get().getParentNode();
-//                        }
-//                        if (parentNode.isPresent()) {
-//                            // Set Class
-//                            ClassOrInterfaceDeclaration cl = (ClassOrInterfaceDeclaration) parentNode.get();
-//                            msField.setClassName(cl.getName().getIdentifier());
-//                            // Find Package
-//                            parentNode = parentNode.get().getParentNode();
-//                            if (parentNode.isPresent()) {
-//                                // Set Package
-//                                CompilationUnit cu = (CompilationUnit) parentNode.get();
-//                                Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
-//                                if (pd.isPresent()) {
-//                                    msField.setPackageName(pd.get().getNameAsString());
-//                                }
-//                            }
-//                        }
-//                    }
-//                }.visit(StaticJavaParser.parse(file), null);
-//                System.out.println(); // empty line
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
 
 }

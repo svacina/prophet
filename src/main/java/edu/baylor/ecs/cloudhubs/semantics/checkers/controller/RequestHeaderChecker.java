@@ -17,7 +17,7 @@ public class RequestHeaderChecker {
             NodeList<AnnotationExpr> annotationExprs = e.getAnnotations();
             if (annotationExprs != null) {
                 annotationExprs.forEach(an -> {
-                    System.out.println(an);
+                    // System.out.println(an);
                     if (an.toString().equals("@RequestHeader")) {
                         abContainsReqHeader.set(true);
                     }
