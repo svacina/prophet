@@ -1,20 +1,18 @@
 package edu.baylor.ecs.cloudhubs.semantics.util;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsClass;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsMethod;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsMethodCall;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsRestCall;
+import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.inconsistencies.MsInconsistencies;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MsCache {
-    private static List<MsClass> msClassList;
-    private static List<MsMethod> msMethodList;
-    private static List<MsMethodCall> msMethodCallList;
-    private static List<MsRestCall> msRestCallList;
-    private static MsInconsistencies msInconsistencies;
+    public static List<MsClass> msClassList;
+    public static List<MsMethod> msMethodList;
+    public static List<MsMethodCall> msMethodCallList;
+    public static List<MsRestCall> msRestCallList;
+    public static List<MsField> msFieldList;
+    public static MsInconsistencies msInconsistencies;
 
     public static void init(){
         msClassList = new ArrayList<>();
@@ -22,6 +20,7 @@ public class MsCache {
         msMethodCallList = new ArrayList<>();
         msInconsistencies = new MsInconsistencies();
         msRestCallList = new ArrayList<>();
+        msFieldList = new ArrayList<>();
         msInconsistencies = new MsInconsistencies();
     }
 
@@ -37,12 +36,17 @@ public class MsCache {
         msMethodCallList.add(msMethodCall);
     }
 
-    public static void print(){
-        msClassList.forEach(n -> System.out.println(n.toString()));
+    public static void addMsField(MsField msField) {
+        msFieldList.add(msField);
     }
 
     public static void addMsRestMethodCall(MsRestCall msRestCall){
         msRestCallList.add(msRestCall);
+    }
+
+    public static void print(){
+        System.out.printf("");
+        System.out.println();
     }
 
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MsParentMethod {
-    private String methodName;
-    private String className;
-    private String packageName;
+    private String parentMethodName;
+    private String parentClassName;
+    private String parentPackageName;
 }

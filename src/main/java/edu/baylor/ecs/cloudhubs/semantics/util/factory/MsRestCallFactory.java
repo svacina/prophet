@@ -18,6 +18,10 @@ public class MsRestCallFactory {
         // here try to print the n
         NodeList<Expression> expressionNodeList = n.getArguments();
         expressionNodeList.forEach(e -> {
+            if (e instanceof  StringLiteralExpr) {
+                StringLiteralExpr se = (StringLiteralExpr) e;
+                msRestCall.setApi(se.toString());
+            }
             if  (e instanceof BinaryExpr) {
                 BinaryExpr be = (BinaryExpr) e;
                 BinaryExprMetaModel me = be.getMetaModel();
@@ -28,6 +32,10 @@ public class MsRestCallFactory {
                 FieldAccessExpr f = (FieldAccessExpr) e;
                 // GET, POST, etc.
                 msRestCall.setHttpMethod(f.getName().toString());
+            }
+            if (e instanceof  NameExpr) {
+                NameExpr ne = (NameExpr) e;
+                msRestCall.setReturnType(ne.toString());
             }
             if (e instanceof ObjectCreationExpr) {
                 ObjectCreationExpr oce = (ObjectCreationExpr) e;

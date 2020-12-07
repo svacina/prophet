@@ -1,21 +1,16 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.visitor;
 
-import com.github.javaparser.ParseException;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
-import com.github.javaparser.ast.body.VariableDeclarator;
 import com.github.javaparser.ast.expr.*;
-import com.github.javaparser.ast.stmt.Statement;
-import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import com.github.javaparser.metamodel.BinaryExprMetaModel;
 import edu.baylor.ecs.cloudhubs.semantics.checkers.controller.RequestHeaderChecker;
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsParentMethodFactory;
+import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
 
 import java.io.File;
@@ -73,7 +68,6 @@ public class MsVisitor {
                     if (role.equals(MsClassRoles.CONTROLLER)) {
                         // (1) Missing '@RequestHeader' annotation (method)
                         RequestHeaderChecker.check(n);
-
                     }
 
                     MsMethod msMethod = new MsMethod();
@@ -110,33 +104,12 @@ public class MsVisitor {
         }
     }
 
-
-    public static void visitNode(File file, Node node) {
-        try {
-            new NodeIterator(new NodeIterator.NodeHandler() {
-                @Override
-                public boolean handle(Node node) {
-                    if (node instanceof Statement) {
-                        Statement st = (Statement) node;
-                        System.out.println(" [Lines " + node.getBegin().get().line + " - " + node.getEnd().get().line + " ] " + node);
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-            }).explore(StaticJavaParser.parse(file));
-        } catch (IOException e) {
-            new RuntimeException(e);
-        }
-    }
-
     public static void visitMethodCalls(File file) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
                 public void visit(MethodCallExpr n, Object arg) {
                     super.visit(n, arg);
-//                    System.out.println(" [L " + n.getBegin().get().line + "] " + n);
                     Optional<Expression> scope = n.getScope();
                     if (scope.isPresent()) {
                         if (scope.get() instanceof  NameExpr) {
@@ -151,21 +124,39 @@ public class MsVisitor {
 
                                 msMethodCall.setLineNumber(lineNumber);
                                 msMethodCall.setStatementDeclaration(n.toString());
-                                msMethodCall.setMsParentMethod(MsParentMethodFactory.getMsParentMethod(n));
+                                msMethodCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
                                 msMethodCall.setCalledServiceId(name);
                                 MethodCallExpr methodCallExpr = (MethodCallExpr) fae.getParentNode().get();
                                 msMethodCall.setCalledMethodName(methodCallExpr.getNameAsString());
+                                msMethodCall.setParentClassId();
                                 // register method call to cache
                                 MsCache.addMsMethodCall(msMethodCall);
                             } else if (name.equals("restTemplate")) {
                                 // rest template is being called
                                 MsRestCall msRestCall = MsRestCallFactory.getMsRestCall(n);
                                 msRestCall.setLineNumber(lineNumber);
-                                msRestCall.setMsParentMethod(MsParentMethodFactory.getMsParentMethod(n));
+                                msRestCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
+                                msRestCall.setParentClassId();
                                 MsCache.addMsRestMethodCall(msRestCall);
                             }
                         }
                     }
+                }
+            }.visit(StaticJavaParser.parse(file), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    public static void visitFields(File file) {
+        try {
+            new VoidVisitorAdapter<Object>() {
+                @Override
+                public void visit(FieldDeclaration n, Object arg) {
+                    super.visit(n, arg);
+                    MsFieldVisitor.visitFieldDeclaration(n);
                 }
             }.visit(StaticJavaParser.parse(file), null);
             // System.out.println(); // empty line

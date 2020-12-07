@@ -1,10 +1,8 @@
 package edu.baylor.ecs.cloudhubs.semantics;
 
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.inject.Inject;
-
 import edu.baylor.ecs.cloudhubs.semantics.util.ProcessFiles;
-import io.quarkus.runtime.Quarkus;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowsFactory;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.CacheManager;
 import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 
@@ -13,10 +11,21 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
 
     @Override
     public int run(String... args) throws Exception {
-        //print
-        final String name = args.length > 0 ? String.join(" ", args) : "";
-        // System.out.println(name);
-        ProcessFiles.run(args);
+        long start = System.currentTimeMillis();
+//        final String name = args.length > 0 ? String.join(" ", args) : "";
+        createCache(args);
+        System.out.println(System.currentTimeMillis() - start);
         return 0;
+    }
+
+    public void analyzeCodeClones(String... args){
+        ProcessFiles.run(args);
+        FlowsFactory.createFlows();
+    }
+
+    public void createCache(String... args) {
+        ProcessFiles.run(args);
+        CacheManager cacheManager = new CacheManager();
+        cacheManager.persistCache("C:\\git\\cache\\");
     }
 }
