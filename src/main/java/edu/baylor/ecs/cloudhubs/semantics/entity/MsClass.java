@@ -2,10 +2,11 @@ package edu.baylor.ecs.cloudhubs.semantics.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class MsClass {
+public class MsClass implements Serializable {
     private String classId;
     private String packageName;
     private String className;

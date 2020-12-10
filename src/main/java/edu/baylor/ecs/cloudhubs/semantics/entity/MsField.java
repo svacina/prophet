@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class MsField extends MsParentMethod {
     private String fieldClass;
     private String fieldVariable;
