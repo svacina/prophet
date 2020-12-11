@@ -4,6 +4,8 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.MsClassRoles;
 import edu.baylor.ecs.cloudhubs.semantics.util.visitor.MsVisitor;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Arrays;
 
 public class ProcessFiles {
 
@@ -24,18 +26,18 @@ public class ProcessFiles {
             if (role != null) {
                 if (role.equals(MsClassRoles.CONTROLLER) || role.equals(MsClassRoles.SERVICE)) {
                     // CLASS
-                    MsVisitor.visitClass(file);
+                    MsVisitor.visitClass(file, path);
                     // METHOD
-                    MsVisitor.visitMethods(file, role);
+                    MsVisitor.visitMethods(file, role, path);
                     // METHOD CALLS
-                    MsVisitor.visitMethodCalls(file);
+                    MsVisitor.visitMethodCalls(file, path);
                     // FIELDS
-                    MsVisitor.visitFields(file);
+                    MsVisitor.visitFields(file, path);
                 } else if (role.equals(MsClassRoles.REPOSITORY)){
                     // CLASS
-                    MsVisitor.visitClass(file);
+                    MsVisitor.visitClass(file, path);
                     // METHOD
-                    MsVisitor.visitMethods(file, role);
+                    MsVisitor.visitMethods(file, role, path);
                 } else if (path.contains("entity")) {
                     // visitFieldDeclaration
                 }
@@ -46,6 +48,17 @@ public class ProcessFiles {
 
     public static void run(String[] args) {
         MsCache.init();
+        String myDirectoryPath = args[0];
+        File file = new File(myDirectoryPath);
+        String[] directories = file.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File current, String name) {
+                boolean isDirectory = new File(current, name).isDirectory();
+                boolean isModule = name.contains("ts");
+                return isDirectory && isModule;
+            }
+        });
+        MsCache.modules = Arrays.asList(directories);
         File projectDir = new File(args[0]);
         processFile(projectDir);
         MsCache.print();

@@ -13,6 +13,7 @@ public class MsCache {
     public static List<MsRestCall> msRestCallList;
     public static List<MsField> msFieldList;
     public static MsInconsistencies msInconsistencies;
+    public static List<String> modules;
 
     public static void init(){
         msClassList = new ArrayList<>();

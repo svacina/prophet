@@ -7,7 +7,7 @@ import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 
 public class MsFieldVisitor {
 
-    public static void visitFieldDeclaration(FieldDeclaration n) {
+    public static void visitFieldDeclaration(FieldDeclaration n, String path) {
         MsField msField = new MsField();
         if (n.getVariables().size() > 0) {
             VariableDeclarator vd = n.getVariables().get(0);
@@ -18,6 +18,7 @@ public class MsFieldVisitor {
                     msField.setFieldClass(vd.getTypeAsString());
                     msField.setParentMethod(MsParentVisitor.getMsParentMethod(n));
                     msField.setLine(n.getBegin().get().line);
+                    msField.setPath(path);
                     MsCache.addMsField(msField);
                 }
             }

@@ -24,20 +24,31 @@ import java.util.stream.Collectors;
 public class FlowsFactory {
 
     public static void createFlows(){
-        // for each controller
-        List<MsClass> controllers = MsCache.msClassList
-                .stream()
-                .filter(n -> n.getRole().equals(MsClassRoles.CONTROLLER))
-                .collect(Collectors.toList());
 
-        controllers.forEach(c -> {
-            // find method calls
-            List<MsMethodCall> serviceMethodCalls = MsCache.msMethodCallList
+        for (String module: MsCache.modules
+             ) {
+            //1. get controllers associated with the module
+            List<MsClass> controllers = MsCache.msClassList
                     .stream()
-                    .filter(mc -> c.getClassId().equals(mc.getParentClassId()))
+                    .filter(n -> n.getRole().equals(MsClassRoles.CONTROLLER) && n.getPath().contains(module))
                     .collect(Collectors.toList());
-            // msMethodCall.getCalledServiceId() msMethodCall.getCalledClassId
-        });
+            for (MsClass controller: controllers
+                 ) {
+                System.out.println(controller.toString());
+            }
+        }
+
+        // for each controller
+
+
+//        controllers.forEach(c -> {
+//            // find method calls
+//            List<MsMethodCall> serviceMethodCalls = MsCache.msMethodCallList
+//                    .stream()
+//                    .filter(mc -> c.getClassId().equals(mc.getParentClassId()))
+//                    .collect(Collectors.toList());
+//            // msMethodCall.getCalledServiceId() msMethodCall.getCalledClassId
+//        });
         // find services
 
         // find method calls from the service

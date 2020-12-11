@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class MsMethod {
+    private String path;
     private String protection;
     private String returnType;
     private String methodName;

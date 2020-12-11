@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class MsVisitor {
 
-    public static void visitClass(File file) {
+    public static void visitClass(File file, String path) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -51,6 +51,7 @@ public class MsVisitor {
                     }
 
                     msClass.setIds();
+                    msClass.setPath(path);
                     MsCache.addMsClass(msClass);
                 }
             }.visit(StaticJavaParser.parse(file), null);
@@ -59,7 +60,7 @@ public class MsVisitor {
         }
     }
 
-    public static void visitMethods(File file, MsClassRoles role) {
+    public static void visitMethods(File file, MsClassRoles role, String path) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -95,6 +96,7 @@ public class MsVisitor {
                         }
                     }
                     msMethod.setIds();
+                    msMethod.setPath(path);
                     MsCache.addMsMethod(msMethod);
                 }
             }.visit(StaticJavaParser.parse(file), null);
@@ -104,7 +106,7 @@ public class MsVisitor {
         }
     }
 
-    public static void visitMethodCalls(File file) {
+    public static void visitMethodCalls(File file, String path) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -137,6 +139,7 @@ public class MsVisitor {
                                 msRestCall.setLineNumber(lineNumber);
                                 msRestCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
                                 msRestCall.setParentClassId();
+                                msRestCall.setPath(path);
                                 MsCache.addMsRestMethodCall(msRestCall);
                             }
                         }
@@ -150,13 +153,13 @@ public class MsVisitor {
 
 
 
-    public static void visitFields(File file) {
+    public static void visitFields(File file, String path) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
                 public void visit(FieldDeclaration n, Object arg) {
                     super.visit(n, arg);
-                    MsFieldVisitor.visitFieldDeclaration(n);
+                    MsFieldVisitor.visitFieldDeclaration(n, path);
                 }
             }.visit(StaticJavaParser.parse(file), null);
             // System.out.println(); // empty line

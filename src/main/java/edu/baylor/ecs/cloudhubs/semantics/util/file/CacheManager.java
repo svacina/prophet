@@ -14,14 +14,16 @@ import java.util.List;
 
 public class CacheManager {
 
-    private final String path = "C:\\git\\data\\";
+    private String path = "C:\\git\\data\\";
 
     public void persistCache(String path){
+        this.path = path;
         writeArrayList("msClassList", MsCache.msClassList);
         writeArrayList("msMethodList", MsCache.msMethodList);
         writeArrayList("msMethodCallList", MsCache.msMethodCallList);
         writeArrayList("msRestCallList", MsCache.msRestCallList);
         writeArrayList("msFieldList", MsCache.msFieldList);
+        writeArrayList("msModulesList", MsCache.modules);
     }
 
     public <T> void writeArrayList(String name, List<T> list) {
@@ -39,8 +41,13 @@ public class CacheManager {
 
         Gson gson = new Gson();
 
-        String data = readDataIntoString("msClassList");
-        Type listOfMyClassObject = new TypeToken<ArrayList<MsClass>>() {}.getType();
+        String data = readDataIntoString("msModulesList");
+        Type listOfMyClassObject = new TypeToken<ArrayList<String>>() {}.getType();
+        List<String> msModulesList = gson.fromJson(data, listOfMyClassObject);
+        MsCache.modules = msModulesList;
+
+        data = readDataIntoString("msClassList");
+        listOfMyClassObject = new TypeToken<ArrayList<MsClass>>() {}.getType();
         List<MsClass> msClassList = gson.fromJson(data, listOfMyClassObject);
         MsCache.msClassList = msClassList;
 
