@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class MsVisitor {
 
-    public static void visitClass(File file, String path) {
+    public static void visitClass(File file, String path, MsClassRoles role, MsId msId) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -34,6 +34,7 @@ public class MsVisitor {
                         pd.ifPresent(packageDeclaration -> msClass.setPackageName(packageDeclaration.getNameAsString()));
                     }
                     NodeList<AnnotationExpr> nl = n.getAnnotations();
+                    msClass.setRole(role);
                     for (AnnotationExpr annotationExpr : nl) {
                         if (annotationExpr.getNameAsString().equals("Service")){
                             msClass.setRole(MsClassRoles.SERVICE);
@@ -51,7 +52,7 @@ public class MsVisitor {
                     }
 
                     msClass.setIds();
-                    msClass.setPath(path);
+                    msClass.setMsId(msId);
                     MsCache.addMsClass(msClass);
                 }
             }.visit(StaticJavaParser.parse(file), null);
@@ -60,7 +61,7 @@ public class MsVisitor {
         }
     }
 
-    public static void visitMethods(File file, MsClassRoles role, String path) {
+    public static void visitMethods(File file, MsClassRoles role, String path, MsId msId) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -96,7 +97,7 @@ public class MsVisitor {
                         }
                     }
                     msMethod.setIds();
-                    msMethod.setPath(path);
+                    msMethod.setMsId(msId);
                     MsCache.addMsMethod(msMethod);
                 }
             }.visit(StaticJavaParser.parse(file), null);
@@ -106,7 +107,7 @@ public class MsVisitor {
         }
     }
 
-    public static void visitMethodCalls(File file, String path) {
+    public static void visitMethodCalls(File file, String path, MsId msId) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
@@ -120,7 +121,7 @@ public class MsVisitor {
                             // decide between service / restTemplate
                             NameExpr fae = scope.get().asNameExpr();
                             String name = fae.getNameAsString();
-                            if (name.equals("service")) {
+                            if (name.toLowerCase().contains("service")) {
                                 // service is being called
                                 MsMethodCall msMethodCall = new MsMethodCall();
 
@@ -131,6 +132,7 @@ public class MsVisitor {
                                 MethodCallExpr methodCallExpr = (MethodCallExpr) fae.getParentNode().get();
                                 msMethodCall.setCalledMethodName(methodCallExpr.getNameAsString());
                                 msMethodCall.setParentClassId();
+                                msMethodCall.setMsId(msId);
                                 // register method call to cache
                                 MsCache.addMsMethodCall(msMethodCall);
                             } else if (name.equals("restTemplate")) {
@@ -139,7 +141,7 @@ public class MsVisitor {
                                 msRestCall.setLineNumber(lineNumber);
                                 msRestCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
                                 msRestCall.setParentClassId();
-                                msRestCall.setPath(path);
+                                msRestCall.setMsId(msId);
                                 MsCache.addMsRestMethodCall(msRestCall);
                             }
                         }
@@ -153,13 +155,13 @@ public class MsVisitor {
 
 
 
-    public static void visitFields(File file, String path) {
+    public static void visitFields(File file, String path, MsId msId) {
         try {
             new VoidVisitorAdapter<Object>() {
                 @Override
                 public void visit(FieldDeclaration n, Object arg) {
                     super.visit(n, arg);
-                    MsFieldVisitor.visitFieldDeclaration(n, path);
+                    MsFieldVisitor.visitFieldDeclaration(n, path, msId);
                 }
             }.visit(StaticJavaParser.parse(file), null);
             // System.out.println(); // empty line

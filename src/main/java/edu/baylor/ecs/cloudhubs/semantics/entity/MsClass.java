@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class MsClass implements Serializable {
-    private String path;
+    private MsId msId;
     private String classId;
     private String packageName;
     private String className;

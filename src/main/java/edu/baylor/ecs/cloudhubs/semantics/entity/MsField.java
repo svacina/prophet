@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class MsField extends MsParentMethod {
-    private String path;
+    private MsId msId;
     private String fieldClass;
     private String fieldVariable;
     private MsParentMethod parentMethod;

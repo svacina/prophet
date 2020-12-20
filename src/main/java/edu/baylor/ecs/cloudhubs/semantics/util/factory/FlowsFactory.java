@@ -1,10 +1,10 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsClass;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsClassRoles;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsMethodCall;
+import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import javassist.expr.MethodCall;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 /**
  * 1. get controllers associated with the module
  * 2. create flows per each controller
- * 3. per each controller find method calls
+ * 2a. per each controller find methods
+ * 3. per each controller method find method calls
  * 4. per each method call find ms field
  * 5. ms field get type of the service
  * 6. find the service in the methods
@@ -27,14 +28,48 @@ public class FlowsFactory {
 
         for (String module: MsCache.modules
              ) {
-            //1. get controllers associated with the module
+            // 1. get controllers associated with the module
             List<MsClass> controllers = MsCache.msClassList
                     .stream()
-                    .filter(n -> n.getRole().equals(MsClassRoles.CONTROLLER) && n.getPath().contains(module))
+                    .filter(n -> n.getRole().equals(MsClassRoles.CONTROLLER) && n.getMsId().getDirectoryName().contains(module))
                     .collect(Collectors.toList());
+            // 2. create flows per each controller
+            List<MsFlow> flows = new ArrayList<>();
             for (MsClass controller: controllers
                  ) {
-                System.out.println(controller.toString());
+                // Flows: init
+                MsFlow msFlow = new MsFlow();
+                msFlow.setModule(module);
+                msFlow.setController(controller);
+                // 2a. per each controller find method calls
+                List<MsMethod> controllerMethods = MsCache.msMethodList
+                        .stream()
+                        .filter(n -> n.getMsId().getDirectoryName().equals(controller.getMsId().getDirectoryName()))
+                        .collect(Collectors.toList());
+                controllerMethods.forEach(cm -> {
+                    // 2.b set controller method
+                    msFlow.setControllerMethod(cm);
+                    // 3. per each controller method find service method call(s)
+                    List<MsMethodCall> controllerServiceCalls = MsCache.msMethodCallList
+                            .stream()
+                            .filter(n -> (n.getMsId().getPath()+n.getParentMethodName()).equals(cm.getMsId().getPath()+cm.getMethodName()))
+                            .collect(Collectors.toList());
+                    // 4. per each method call find ms field
+                    List<MsField> controllerServiceFields = MsCache.msFieldList
+                            .stream()
+                            .filter(n -> n.getMsId().getPath().equals(cm.getMsId().getPath()))
+                            .collect(Collectors.toList());
+
+                    List<MsMethod> msServices = new ArrayList<>();
+                    for (MsField msField: controllerServiceFields
+                         ) {
+//                        msServices.addAll(MsCache.msMethodList.stream().filter(n -> n.getM))
+                    }
+
+                    msFlow.setControllerServiceFields(controllerServiceFields);
+                    flows.add(msFlow);
+                });
+
             }
         }
 
