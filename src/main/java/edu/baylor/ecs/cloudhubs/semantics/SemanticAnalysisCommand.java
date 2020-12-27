@@ -1,6 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics;
 
 import edu.baylor.ecs.cloudhubs.semantics.util.ProcessFiles;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowsFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.file.CacheManager;
 import io.quarkus.runtime.QuarkusApplication;
@@ -27,6 +28,8 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
     public void analyzeCodeClones(String... args){
         CacheManager cacheManager = new CacheManager();
         cacheManager.recreateCache();
-        FlowsFactory.createFlows();
+        FlowBuilder flowBuilder = new FlowBuilder();
+        flowBuilder.buildFlows();
+//        FlowsFactory.createFlows();
     }
 }
