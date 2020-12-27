@@ -18,4 +18,13 @@ public class MsFlow {
     // repository
     private List<MsClass> repositories;
     private List<MsMethod> repositoryMethods;
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(controller.getClassName());
+        sb.append(" -> ");
+        sb.append(controllerMethod.getMethodName());
+        return sb.toString();
+    }
 }

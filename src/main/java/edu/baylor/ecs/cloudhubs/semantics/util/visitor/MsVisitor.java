@@ -121,6 +121,20 @@ public class MsVisitor {
                             // decide between service / restTemplate
                             NameExpr fae = scope.get().asNameExpr();
                             String name = fae.getNameAsString();
+                            if (name.toLowerCase().contains("repository")){
+                                MsMethodCall msMethodCall = new MsMethodCall();
+
+                                msMethodCall.setLineNumber(lineNumber);
+                                msMethodCall.setStatementDeclaration(n.toString());
+                                msMethodCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
+                                msMethodCall.setCalledServiceId(name);
+                                MethodCallExpr methodCallExpr = (MethodCallExpr) fae.getParentNode().get();
+                                msMethodCall.setCalledMethodName(methodCallExpr.getNameAsString());
+                                msMethodCall.setParentClassId();
+                                msMethodCall.setMsId(msId);
+                                // register method call to cache
+                                MsCache.addMsMethodCall(msMethodCall);
+                            }
                             if (name.toLowerCase().contains("service")) {
                                 // service is being called
                                 MsMethodCall msMethodCall = new MsMethodCall();

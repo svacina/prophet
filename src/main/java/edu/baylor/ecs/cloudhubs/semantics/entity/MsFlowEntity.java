@@ -16,6 +16,7 @@ public class MsFlowEntity {
     private MsField msServiceRepositoryField;
     private MsClass msRepository;
     private List<MsRestCall> msRestCalls;
+    private MsMethod msRepositoryMethod;
     public MsFlowEntity(MsClass msController, MsMethod msControllerMethod) {
         this.msController = msController;
         this.msControllerMethod = msControllerMethod;
@@ -23,5 +24,14 @@ public class MsFlowEntity {
 
     public MsFlowEntity(MsMethod n) {
         this.msControllerMethod = n;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(msController.getClassName());
+        sb.append(" -> ");
+        sb.append(msControllerMethod.getMethodName());
+        return sb.toString();
     }
 }

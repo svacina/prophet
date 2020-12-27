@@ -21,8 +21,6 @@ public class FlowBuilder {
                 // 3. get service field variable in controller class by method call
                 Optional<MsField> serviceField = findServiceField(msFlowEntity.getMsServiceMethodCall());
                 if (serviceField.isPresent()) {
-
-                    System.out.println();
                     msFlowEntity.setMsControllerServiceField(serviceField.get());
                     // 4. get service class
                     Optional<MsClass> msServiceClass = findService(msFlowEntity.getMsControllerServiceField());
@@ -35,12 +33,57 @@ public class FlowBuilder {
                             // 5. get rest calls
                             List<MsRestCall> restCalls = findRestCalls(msFlowEntity.getMsServiceMethod());
                             msFlowEntity.setMsRestCalls(restCalls);
+                            // 6. find method call in the service
+                            Optional<MsMethodCall> repositoryMethodCall =
+                                    findMsRepositoryMethodCall(msFlowEntity.getMsService(), msFlowEntity.getMsServiceMethod());
+                            if (repositoryMethodCall.isPresent()) {
+                                msFlowEntity.setMsRepositoryMethodCall(repositoryMethodCall.get());
+                                // 7. find repository variable
+                                Optional<MsField> repositoryField = findRepositoryField(msFlowEntity.getMsService(), msFlowEntity.getMsRepositoryMethodCall());
+                                if (repositoryField.isPresent()) {
+                                    msFlowEntity.setMsServiceRepositoryField(repositoryField.get());
+                                    // 8. find repository class
+                                    Optional<MsClass> repositoryClass = findRepositoryClass(msFlowEntity.getMsServiceRepositoryField());
+                                    if (repositoryClass.isPresent()) {
+                                        msFlowEntity.setMsRepository(repositoryClass.get());
+                                        // 9. find repository method
+                                        Optional<MsMethod> repositoryMethod = findRepositoryMethod(msFlowEntity.getMsRepository(), msFlowEntity.getMsRepositoryMethodCall());
+                                        if (repositoryMethod.isPresent()) {
+                                            msFlowEntity.setMsRepositoryMethod(repositoryMethod.get());
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
         return msFlowEntities;
+    }
+
+    private Optional<MsMethod> findRepositoryMethod(MsClass msRepository, MsMethodCall msRepositoryMethodCall) {
+        return MsCache.msMethodList.stream()
+                .filter(n -> n.getMsId().getPath().equals(msRepository.getMsId().getPath()) && n.getMethodName().equals(msRepositoryMethodCall.getCalledMethodName()))
+                .findFirst();
+    }
+
+    private Optional<MsClass> findRepositoryClass(MsField msServiceRepositoryField) {
+        return MsCache.msClassList.stream()
+                .filter(n -> n.getClassName().equals(msServiceRepositoryField.getFieldClass()))
+                .findFirst();
+    }
+
+    private Optional<MsField> findRepositoryField(MsClass msService, MsMethodCall repositoryMethodCall) {
+        return MsCache.msFieldList.stream()
+                .filter(n -> n.getMsId().getPath().equals(msService.getMsId().getPath()) && n.getFieldVariable().equals(repositoryMethodCall.getCalledServiceId()))
+                .findFirst();
+    }
+
+    private Optional<MsMethodCall> findMsRepositoryMethodCall(MsClass msService, MsMethod msServiceMethod) {
+        return MsCache.msMethodCallList.stream()
+                .filter(n -> n.getMsId().getPath().equals(msService.getMsId().getPath()) && n.getParentMethodName().equals(msServiceMethod.getMethodName()))
+                .findFirst();
     }
 
     private Optional<MsMethod> findMsServiceMethod(MsClass msService, MsMethodCall controllerServiceMethodCall) {

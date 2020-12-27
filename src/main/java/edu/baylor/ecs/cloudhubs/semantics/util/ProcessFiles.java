@@ -50,9 +50,9 @@ public class ProcessFiles {
         // PRINT CACHE
     }
 
-    public static void run(String[] args) {
+    public static void run(String path) {
         MsCache.init();
-        String myDirectoryPath = args[0];
+        String myDirectoryPath = path;
         File file = new File(myDirectoryPath);
         String[] directories = file.list(new FilenameFilter() {
             @Override
@@ -63,7 +63,7 @@ public class ProcessFiles {
             }
         });
         MsCache.modules = Arrays.asList(directories);
-        File projectDir = new File(args[0]);
+        File projectDir = new File(path);
         processFile(projectDir);
         MsCache.print();
         System.out.println();

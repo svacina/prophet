@@ -37,7 +37,9 @@ public class CacheManager {
         }
     }
 
-    public void recreateCache(){
+    public void recreateCache(String cachePath){
+
+        this.path = cachePath;
 
         Gson gson = new Gson();
 
