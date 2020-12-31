@@ -3,6 +3,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util.file;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 
 import java.io.*;

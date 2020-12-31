@@ -7,7 +7,7 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.MethodCallExpr;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsParentMethod;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsParentMethod;
 
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsClassRoles;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsId;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClassRoles;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
 import edu.baylor.ecs.cloudhubs.semantics.util.visitor.MsVisitor;
 
 import java.io.File;

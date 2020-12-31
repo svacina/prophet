@@ -1,12 +1,11 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.metamodel.BinaryExprMetaModel;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsRestCall;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsRestCall;
 import java.util.Optional;
 
 public class MsRestCallFactory {

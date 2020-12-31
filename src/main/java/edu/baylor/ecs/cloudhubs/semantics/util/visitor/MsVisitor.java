@@ -5,12 +5,11 @@ import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
-import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import edu.baylor.ecs.cloudhubs.semantics.checkers.controller.RequestHeaderChecker;
-import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.constructs.MsMethodBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
 
 import java.io.File;
@@ -42,7 +41,6 @@ public class MsVisitor {
                         if (annotationExpr.getNameAsString().equals("RestController")){
                             msClass.setRole(MsClassRoles.CONTROLLER);
                             // get annotation request mapping and value
-
                         }
                         if (annotationExpr.getNameAsString().equals("Repository")){
                             msClass.setRole(MsClassRoles.REPOSITORY);
@@ -68,38 +66,7 @@ public class MsVisitor {
                 @Override
                 public void visit(MethodDeclaration n, Object arg) {
                     super.visit(n, arg);
-                    if (role.equals(MsClassRoles.CONTROLLER)) {
-                        // (1) Missing '@RequestHeader' annotation (method)
-                        RequestHeaderChecker.check(n);
-                    }
-
-                    MsMethod msMethod = new MsMethod();
-                    msMethod.setReturnType(n.getTypeAsString());
-                    msMethod.setMethodName(n.getNameAsString());
-                    msMethod.setLine(n.getBegin().get().line);
-                    NodeList<Modifier> modifiers = n.getModifiers();
-                    NodeList<Parameter> parameters = n.getParameters();
-                    // ToDo: set arguments
-                    parameters.stream().forEach(e -> {
-                        msMethod.addArgument(new MsArgument(e.getTypeAsString()));
-                    });
-                    Optional<Node> parentNode = n.getParentNode();
-                    if (parentNode.isPresent()) {
-                        // Set Class
-                        ClassOrInterfaceDeclaration cl = (ClassOrInterfaceDeclaration) parentNode.get();
-                        msMethod.setClassName(cl.getName().getIdentifier());
-                        // Find Package
-                        parentNode = parentNode.get().getParentNode();
-                        if (parentNode.isPresent()) {
-                            // Set Package
-                            CompilationUnit cu = (CompilationUnit) parentNode.get();
-                            Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
-                            pd.ifPresent(packageDeclaration -> msMethod.setPackageName(packageDeclaration.getNameAsString()));
-                        }
-                    }
-                    msMethod.setIds();
-                    msMethod.setMsId(msId);
-                    MsCache.addMsMethod(msMethod);
+                    MsMethodBuilder.buildMsMethod(n, role, path, msId);
                 }
             }.visit(StaticJavaParser.parse(file), null);
             // System.out.println(); // empty line

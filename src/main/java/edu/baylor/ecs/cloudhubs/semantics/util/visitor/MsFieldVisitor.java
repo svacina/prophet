@@ -2,8 +2,8 @@ package edu.baylor.ecs.cloudhubs.semantics.util.visitor;
 
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsField;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsId;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsField;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 
 public class MsFieldVisitor {

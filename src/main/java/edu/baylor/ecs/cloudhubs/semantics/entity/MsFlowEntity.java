@@ -1,5 +1,6 @@
 package edu.baylor.ecs.cloudhubs.semantics.entity;
 
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import lombok.Data;
 
 import java.util.List;

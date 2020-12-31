@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity;
+package edu.baylor.ecs.cloudhubs.semantics.entity.graph;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

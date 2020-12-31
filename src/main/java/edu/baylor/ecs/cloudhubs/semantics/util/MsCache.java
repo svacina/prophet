@@ -1,6 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.inconsistencies.MsInconsistencies;
 
 import java.util.ArrayList;

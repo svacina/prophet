@@ -1,5 +1,9 @@
 package edu.baylor.ecs.cloudhubs.semantics.entity;
 
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsField;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsMethod;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsRestCall;
 import lombok.Data;
 
 import java.util.List;

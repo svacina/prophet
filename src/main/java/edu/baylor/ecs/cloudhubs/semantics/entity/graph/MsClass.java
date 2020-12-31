@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity;
+package edu.baylor.ecs.cloudhubs.semantics.entity.graph;
 
 import lombok.Data;
 
@@ -13,6 +13,8 @@ public class MsClass implements Serializable {
     private String className;
     private List<String> fieldNames;
     private MsClassRoles role;
+
+
 
     public void setIds(){
         StringBuilder sb = new StringBuilder();

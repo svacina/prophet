@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity;
+package edu.baylor.ecs.cloudhubs.semantics.entity.graph;
 
 import lombok.Data;
 
@@ -19,6 +19,7 @@ public class MsMethod {
     private List<MsArgument> msArgumentList;
     private String mapping;
     private String mappingPath;
+    private List<MsAnnotation> msAnnotations;
 
     public MsMethod(){
         this.msArgumentList = new ArrayList<>();

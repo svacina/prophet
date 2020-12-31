@@ -1,6 +1,10 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsArgument;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsMethod;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsRestCall;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -140,9 +144,20 @@ public class CodeClonesFactory {
         if (a == null || b == null) {
             return 0.0;
         }
-        MsClass aCtrl = a.getMsController();
-        MsClass bCtrl = b.getMsController();
+        MsMethod aCtrl = a.getMsControllerMethod();
+        MsMethod bCtrl = b.getMsControllerMethod();
+        if (aCtrl == null || bCtrl == null) {
+            return 0.0;
+        }
 
+        aCtrl.getMsAnnotations();
+        // compare HTTP method
+
+        // compare return type
+        aCtrl.getReturnType();
+        // compare arguments
+
+        // compare
         return 0.0;
 
     }

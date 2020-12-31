@@ -1,6 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import java.util.List;
 import java.util.Optional;
