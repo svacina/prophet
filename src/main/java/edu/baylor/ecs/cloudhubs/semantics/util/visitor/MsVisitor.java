@@ -42,6 +42,7 @@ public class MsVisitor {
                         if (annotationExpr.getNameAsString().equals("RestController")){
                             msClass.setRole(MsClassRoles.CONTROLLER);
                             // get annotation request mapping and value
+
                         }
                         if (annotationExpr.getNameAsString().equals("Repository")){
                             msClass.setRole(MsClassRoles.REPOSITORY);

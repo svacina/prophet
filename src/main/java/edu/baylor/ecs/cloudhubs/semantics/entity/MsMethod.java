@@ -17,6 +17,8 @@ public class MsMethod {
     private String classId;
     private int line;
     private List<MsArgument> msArgumentList;
+    private String mapping;
+    private String mappingPath;
 
     public MsMethod(){
         this.msArgumentList = new ArrayList<>();

@@ -65,7 +65,6 @@ public class ProcessFiles {
         MsCache.modules = Arrays.asList(directories);
         File projectDir = new File(path);
         processFile(projectDir);
-        MsCache.print();
         System.out.println();
     }
 }

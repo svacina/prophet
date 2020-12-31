@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 public class FlowBuilder {
 
-    public List<MsFlowEntity> buildFlows(){
+    public void buildFlows(){
         List<MsFlowEntity> msFlowEntities = findControllerMethods();
         for (MsFlowEntity msFlowEntity: msFlowEntities
              ) {
@@ -59,7 +59,7 @@ public class FlowBuilder {
                 }
             }
         }
-        return msFlowEntities;
+        MsCache.msFlows = msFlowEntities;
     }
 
     private Optional<MsMethod> findRepositoryMethod(MsClass msRepository, MsMethodCall msRepositoryMethodCall) {
