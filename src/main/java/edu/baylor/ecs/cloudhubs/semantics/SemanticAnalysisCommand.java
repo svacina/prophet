@@ -20,28 +20,24 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
         long start = System.currentTimeMillis();
 //        String[] split = args[0].split(",");
 //        sutPath = split[0];
+        MsCache.init();
+
         sutPath = "/Users/jan/Development/train-ticket/";
         cachePath = "/Users/jan/Development/data/";
+        sutPath = "C:\\git\\train-ticket";
+        cachePath = "C:\\git\\data";
 
-        ProcessFiles.run(sutPath);
-        FlowBuilder flowBuilder = new FlowBuilder();
-        flowBuilder.buildFlows();
-//        CacheManager cacheManager = new CacheManager();
-//        cacheManager.recreateCache(cachePath);
+//        ProcessFiles.run(sutPath);
+//        FlowBuilder flowBuilder = new FlowBuilder();
+//        flowBuilder.buildFlows();
+        CacheManager cacheManager = new CacheManager();
+//        cacheManager.persistCache(cachePath);
+        cacheManager.recreateCache(cachePath);
         CodeClonesFactory codeClonesFactory = new CodeClonesFactory();
         codeClonesFactory.findCodeClones();
-//        cacheManager.persistCache(cachePath);
-//        createCache(sutPath);
-        MsCache.print();
         System.out.println(System.currentTimeMillis() - start);
         return 0;
     }
 
-    public void createCache(String path) {
 
-    }
-
-    public void analyzeCodeClones(){
-
-    }
 }

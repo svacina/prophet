@@ -1,0 +1,27 @@
+{
+  "a" : {
+    "controller": {
+
+    },
+    "controllerMethod": {
+      "": "",
+      "": ""
+    },
+    "service": {
+
+    },
+    "serviceMethod": {
+      "returnType": "ToDo",
+      "methodName": "",
+      "statementDeclaration": "",
+      "methodBody": "ToDo"
+    },
+    "repository": {
+      "": "",
+      "": ""
+    },
+    "repositoryMethod": {
+
+    }
+  }
+}

@@ -1,10 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsArgument;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsMethod;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsRestCall;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +16,7 @@ public class CodeClonesFactory {
                 String jModule = MsCache.modules.get(j);
                 // get flows from i
                 List<MsFlowEntity> iFlows = getFlowEntities(iModule);
+
                 // get flows from j
                 List<MsFlowEntity> jFlows = getFlowEntities(jModule);
                 // compare each flow from i with each flow from j
@@ -50,13 +48,13 @@ public class CodeClonesFactory {
                         if (msCodeClone.getGlobalSimilarity() > 0.0) {
                             MsCache.addHighSimilar(msCodeClone);
                         }
-                        if (msCodeClone.getSimilarityController() > 0.0) {
+                        if (msCodeClone.getSimilarityController() == 4.0) {
                             MsCache.addSameController(msCodeClone);
                         }
                         if (msCodeClone.getSimilarityRepository() > 0.0) {
                             MsCache.addSameRepository(msCodeClone);
                         }
-                        if (msCodeClone.getSimilarityRestCalls() > 3.0) {
+                        if (msCodeClone.getSimilarityRestCalls() >= 3.0) {
                             MsCache.addSameRestCall(msCodeClone);
                         }
                     }
@@ -99,9 +97,6 @@ public class CodeClonesFactory {
         if (a.getHttpMethod() != null && b.getHttpMethod() != null && a.getHttpMethod().equals(b.getHttpMethod())) {
             similarity += 1.0;
         }
-        if (similarity == 3.0) {
-            System.out.println();
-        }
         return similarity;
     }
 
@@ -141,6 +136,7 @@ public class CodeClonesFactory {
     }
 
     private double compareController(MsFlowEntity a, MsFlowEntity b) {
+        double same = 0.0;
         if (a == null || b == null) {
             return 0.0;
         }
@@ -150,15 +146,36 @@ public class CodeClonesFactory {
             return 0.0;
         }
 
-        aCtrl.getMsAnnotations();
-        // compare HTTP method
+        if (aCtrl.getMethodName().equals(bCtrl.getMethodName())){
+            same += 1.0;
+        }
 
-        // compare return type
-        aCtrl.getReturnType();
-        // compare arguments
+        if (aCtrl.getReturnType().equals(bCtrl.getReturnType())){
+            same += 1.0;
+        }
 
-        // compare
-        return 0.0;
+        for (MsAnnotation aA: aCtrl.getMsAnnotations()
+             ) {
+            for (MsAnnotation bA: bCtrl.getMsAnnotations()
+                 ) {
+                if (aA.getAnnotationName().equals(bA.getAnnotationName())) {
+                    if (aCtrl.getReturnType().equals(bCtrl.getReturnType())) {
+                        same += 1.0;
+                    }
+                }
+            }
+        }
+
+//        for (MsArgument msA: aCtrl.getMsArgumentList()
+//             ) {
+//            for (MsArgument msB: bCtrl.getMsArgumentList()
+//                 ) {
+//                if (msA.getReturnType().equals(msB.getReturnType())){
+//                    same += 1.0;
+//                }
+//            }
+//        }
+        return same;
 
     }
 }

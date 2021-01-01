@@ -26,7 +26,6 @@ public class CacheManager {
         writeArrayList("msFieldList", MsCache.msFieldList);
         writeArrayList("msModulesList", MsCache.modules);
         writeArrayList("msFlowList", MsCache.msFlows);
-        MsCache.print();
     }
 
     public <T> void writeArrayList(String name, List<T> list) {
@@ -77,7 +76,7 @@ public class CacheManager {
         MsCache.msFieldList = msFieldList;
 
         data = readDataIntoString("msFlowList");
-        listOfMyClassObject = new TypeToken<ArrayList<MsField>>() {}.getType();
+        listOfMyClassObject = new TypeToken<ArrayList<MsFlowEntity>>() {}.getType();
         List<MsFlowEntity> msFlowEntities = gson.fromJson(data, listOfMyClassObject);
         MsCache.msFlows = msFlowEntities;
     }

@@ -11,4 +11,6 @@ public class MsCodeClone {
     private double similarityRepository;
     private double similarityRestCalls;
     private double globalSimilarity;
+
+
 }

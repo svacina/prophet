@@ -10,15 +10,15 @@ public class MsField extends MsParentMethod {
     private MsParentMethod parentMethod;
     private int line;
 
-    @Override
-    public String toString() {
-        return "[L" + line + "] " +
-                parentMethod.getParentPackageName() + '.' +
-                parentMethod.getParentClassName() + '.' +
-                parentMethod.getParentMethodName() +
-                " : " +
-                fieldClass + '.' +
-                fieldVariable + '.'
-                ;
-    }
+//    @Override
+//    public String toString() {
+//        return "[L" + line + "] " +
+//                parentMethod.getParentPackageName() + '.' +
+//                parentMethod.getParentClassName() + '.' +
+//                parentMethod.getParentMethodName() +
+//                " : " +
+//                fieldClass + '.' +
+//                fieldVariable + '.'
+//                ;
+//    }
 }

@@ -21,6 +21,6 @@ public class MsId {
                 .subList(0, 6)
                 .toArray(new String[0]);
         directoryName = String.join("/", subarr);
-        System.out.printf("");
+//        System.out.printf("");
     }
 }

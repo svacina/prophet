@@ -51,7 +51,7 @@ public class ProcessFiles {
     }
 
     public static void run(String path) {
-        MsCache.init();
+
         String myDirectoryPath = path;
         File file = new File(myDirectoryPath);
         String[] directories = file.list(new FilenameFilter() {
@@ -65,6 +65,6 @@ public class ProcessFiles {
         MsCache.modules = Arrays.asList(directories);
         File projectDir = new File(path);
         processFile(projectDir);
-        System.out.println();
+//        System.out.println();
     }
 }
