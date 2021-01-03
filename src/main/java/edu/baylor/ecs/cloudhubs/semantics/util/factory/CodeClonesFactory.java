@@ -16,7 +16,6 @@ public class CodeClonesFactory {
                 String jModule = MsCache.modules.get(j);
                 // get flows from i
                 List<MsFlowEntity> iFlows = getFlowEntities(iModule);
-
                 // get flows from j
                 List<MsFlowEntity> jFlows = getFlowEntities(jModule);
                 // compare each flow from i with each flow from j
@@ -44,30 +43,44 @@ public class CodeClonesFactory {
                             msCodeClone.setSimilarityRestCalls(0.0);
                         }
                         msCodeClone.setGlobalSimilarity(calculateGlobalSimilarity(msCodeClone));
-                        MsCache.addCodeClone(msCodeClone);
-                        if (msCodeClone.getGlobalSimilarity() > 0.0) {
-                            MsCache.addHighSimilar(msCodeClone);
-                        }
-                        if (msCodeClone.getSimilarityController() == 4.0) {
-                            MsCache.addSameController(msCodeClone);
-                        }
-                        if (msCodeClone.getSimilarityRepository() > 0.0) {
-                            MsCache.addSameRepository(msCodeClone);
-                        }
-                        if (msCodeClone.getSimilarityRestCalls() >= 3.0) {
-                            MsCache.addSameRestCall(msCodeClone);
-                        }
+                        classifyCodeClones(msCodeClone);
                     }
                 }
             }
         }
     }
 
+    private void classifyCodeClones(MsCodeClone msCodeClone) {
+        MsCache.addCodeClone(msCodeClone);
+        if (msCodeClone.getGlobalSimilarity() > 0.0) {
+            MsCache.addHighSimilar(msCodeClone);
+        }
+        if (msCodeClone.getSimilarityController() == 1.0) {
+            MsCache.addSameController(msCodeClone);
+        }
+        if (msCodeClone.getSimilarityRepository() > 0.0) {
+            MsCache.addSameRepository(msCodeClone);
+        }
+        if (msCodeClone.getSimilarityRestCalls() >= 3.0) {
+            MsCache.addSameRestCall(msCodeClone);
+        }
+        if (msCodeClone.getGlobalSimilarity() < 0.8 && msCodeClone.getGlobalSimilarity() >= 0.6) {
+            MsCache.typeC.add(msCodeClone);
+        }
+        if (msCodeClone.getGlobalSimilarity() < 0.9 && msCodeClone.getGlobalSimilarity() >= 0.8) {
+            MsCache.typeB.add(msCodeClone);
+        }
+        if (msCodeClone.getGlobalSimilarity() <= 1.0 && msCodeClone.getGlobalSimilarity() >= 0.9) {
+            MsCache.typeA.add(msCodeClone);
+        }
+
+    }
+
     private double calculateGlobalSimilarity(MsCodeClone msCodeClone) {
-        return msCodeClone.getSimilarityController()
-                + msCodeClone.getSimilarityService()
-                + msCodeClone.getSimilarityRepository()
-                + msCodeClone.getSimilarityRestCalls();
+        return (msCodeClone.getSimilarityController() * 0.8)
+                + (msCodeClone.getSimilarityService() * 0.05 )
+                + (msCodeClone.getSimilarityRepository() * 0.05 )
+                + (msCodeClone.getSimilarityRestCalls() * 0.1);
     }
 
     private double compareRestCalls(List<MsRestCall> aMsRestCalls, List<MsRestCall> bMsRestCalls) {
@@ -97,7 +110,7 @@ public class CodeClonesFactory {
         if (a.getHttpMethod() != null && b.getHttpMethod() != null && a.getHttpMethod().equals(b.getHttpMethod())) {
             similarity += 1.0;
         }
-        return similarity;
+        return similarity / 3.0;
     }
 
     private double compareRepository(MsMethod aMethod, MsMethod bMethod) {
@@ -107,7 +120,7 @@ public class CodeClonesFactory {
     private double compareService(MsMethod aMethod, MsMethod bMethod) {
         double same = 0.0;
         if (aMethod.getReturnType() != null && bMethod.getReturnType() != null && aMethod.getReturnType().equals(bMethod.getReturnType())) {
-            same += 1.0;
+            same += 0.5;
         }
         List<MsArgument> aArguments = aMethod.getMsArgumentList();
         List<MsArgument> bArguments = bMethod.getMsArgumentList();
@@ -129,7 +142,7 @@ public class CodeClonesFactory {
         return same;
     }
 
-    private List<MsFlowEntity> getFlowEntities(String module) {
+    public List<MsFlowEntity> getFlowEntities(String module) {
         return MsCache.msFlows
                 .stream()
                 .filter(n -> n.getMsController().getMsId().getPath().contains(module)).collect(Collectors.toList());
@@ -175,7 +188,7 @@ public class CodeClonesFactory {
 //                }
 //            }
 //        }
-        return same;
+        return same / 4;
 
     }
 }

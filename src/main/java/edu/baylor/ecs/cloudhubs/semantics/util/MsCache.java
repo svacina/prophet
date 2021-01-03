@@ -21,6 +21,10 @@ public class MsCache {
     public static List<MsCodeClone> sameRepositoryCC;
     public static List<MsCodeClone> sameRestCallsCC;
     public static List<MsCodeClone> sameControllerCC;
+    // code clone types
+    public static List<MsCodeClone> typeA;
+    public static List<MsCodeClone> typeB;
+    public static List<MsCodeClone> typeC;
 
     public static void init(){
         msClassList = new ArrayList<>();
@@ -35,6 +39,9 @@ public class MsCache {
         sameRepositoryCC = new ArrayList<>();
         sameRestCallsCC = new ArrayList<>();
         sameControllerCC = new ArrayList<>();
+        typeA = new ArrayList<>();
+        typeB = new ArrayList<>();
+        typeC = new ArrayList<>();
     }
 
     public static void addMsClass(MsClass msClass) {
