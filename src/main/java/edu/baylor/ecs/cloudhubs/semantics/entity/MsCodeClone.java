@@ -11,6 +11,11 @@ public class MsCodeClone {
     private double similarityRepository;
     private double similarityRestCalls;
     private double globalSimilarity;
+    private boolean typeA;
+    private boolean typeB;
 
-
+    @Override
+    public String toString() {
+        return a.toString() + " | " + b.toString() + " : " + globalSimilarity;
+    }
 }

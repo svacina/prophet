@@ -4,9 +4,15 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlowEntity;
 import edu.baylor.ecs.cloudhubs.semantics.entity.quantification.ModuleClonePair;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import org.checkerframework.checker.units.qual.A;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModuleClonePairFactory {
 
@@ -16,13 +22,29 @@ public class ModuleClonePairFactory {
         codeClonesFactory = new CodeClonesFactory();
     }
 
-//    private double
+    public void printModuleClonePairs(){
+        List<ModuleClonePair> moduleClonePairs = createModuleClonePairs();
+        File csvOutputFile = new File("/Users/jan/Development/data/clones.txt");
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            moduleClonePairs.stream()
+                    .map(this::convertToString)
+                    .forEach(pw::println);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String convertToString(ModuleClonePair pair) {
+        return pair.toString();
+    }
 
     /**
      * compare ever module with the other
      * look at how similar those two modules are
      */
-    public void createModuleClonePairs() {
+    public List<ModuleClonePair> createModuleClonePairs() {
+        List<ModuleClonePair> moduleClonePairs = new ArrayList<>();
         for (int i = 0; i < MsCache.modules.size(); i++) {
             for (int j = 0; j < MsCache.modules.size(); j++) {
                 String iModule = MsCache.modules.get(i);
@@ -35,11 +57,17 @@ public class ModuleClonePairFactory {
                     moduleClonePair.setModuleBFlows(codeClonesFactory.getFlowEntities(jModule));
                     moduleClonePair.setCodeClones(getAssociatedCodeClones(iModule, jModule));
                     moduleClonePair.setPercentClonesModuleA(flowRepresentation(moduleClonePair.getModuleAFlows(), moduleClonePair.getCodeClones()));
+                    moduleClonePairs.add(moduleClonePair);
                 }
             }
         }
+        List<ModuleClonePair> greater = moduleClonePairs.stream().filter(n -> n.getPercentClonesModuleA() > 0.0).collect(Collectors.toList());
+        return greater;
     }
 
+//    private List<MsCodeClone> getTypeABCodeClones(){
+//        return MsCache.msCodeClones.
+//    }
 
     /**
      * Find code clones such that A has moduleA and B has moduleB
@@ -47,8 +75,8 @@ public class ModuleClonePairFactory {
     private List<MsCodeClone> getAssociatedCodeClones(String moduleA, String moduleB){
         return MsCache.msCodeClones.stream()
                 .filter(n ->
-                        (n.getA().getMsController().getMsId().getPath().contains(moduleA) && n.getB().getMsController().getMsId().getPath().contains(moduleB) && n.isTypeA() && n.isTypeB()) ||
-                        (n.getA().getMsController().getMsId().getPath().contains(moduleB) && n.getB().getMsController().getMsId().getPath().contains(moduleA) && n.isTypeA() && n.isTypeB())
+                        (n.getA().getMsController().getMsId().getPath().contains(moduleA) && n.getB().getMsController().getMsId().getPath().contains(moduleB) && (n.isTypeA() || n.isTypeB())) ||
+                        (n.getA().getMsController().getMsId().getPath().contains(moduleB) && n.getB().getMsController().getMsId().getPath().contains(moduleA) && (n.isTypeA() || n.isTypeB()))
                         )
                 .collect(Collectors.toList());
     }
@@ -60,25 +88,44 @@ public class ModuleClonePairFactory {
     private double flowRepresentation(List<MsFlowEntity> flowEntities, List<MsCodeClone> codeClones) {
         // iterate through module A flows in code clones and look if it is present in the code clones (a)
         int same = 0;
+
+//        for (MsCodeClone codeClone: codeClones
+//             ) {
+//            for (:
+//                 ) {
+//
+//            }
+//        }
         for (MsFlowEntity msFlowEntity: flowEntities
              ) {
             for (MsCodeClone msCodeClone: codeClones
                  ) {
-                if (msFlowEntity
-                        .getMsController()
-                        .getMsId().getPath()
-                        .contains(msCodeClone.getA().getMsController().getMsId().getPath()) ||
-                        msFlowEntity.getMsController().getMsId().getPath().contains(msCodeClone.getB().getMsController().getMsId().getPath())
-                ){
+
+                if (msFlowEntity.getMsController().getClassName().equals(msCodeClone.getA().getMsController().getClassName()) &&
+                        msFlowEntity.getMsControllerMethod().getMethodName().equals(msCodeClone.getA().getMsControllerMethod().getMethodName())) {
                     same += 1;
                     break;
                 }
+
+//                if (msFlowEntity
+//                        .getMsController()
+//                        .getMsId().getPath()
+//                        .contains(msCodeClone.getA().getMsController().getMsId().getPath()) ||
+//                        msFlowEntity.getMsController().getMsId().getPath().contains(msCodeClone.getB().getMsController().getMsId().getPath())
+//                ){
+//                    same += 1;
+//                    break;
+//                }
             }
         }
         if (flowEntities.size() == 0) {
             return 0.0;
         } else {
-            return (same / flowEntities.size()) * 100;
+            if (same == 0.0) {
+                return same;
+            } else {
+                return ((double) same / (double) flowEntities.size()) * 100;
+            }
         }
 
     }

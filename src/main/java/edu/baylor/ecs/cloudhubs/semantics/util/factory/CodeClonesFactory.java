@@ -51,7 +51,7 @@ public class CodeClonesFactory {
     }
 
     private void classifyCodeClones(MsCodeClone msCodeClone) {
-        MsCache.addCodeClone(msCodeClone);
+
         if (msCodeClone.getGlobalSimilarity() > 0.0) {
             MsCache.addHighSimilar(msCodeClone);
         }
@@ -68,12 +68,17 @@ public class CodeClonesFactory {
             MsCache.typeC.add(msCodeClone);
         }
         if (msCodeClone.getGlobalSimilarity() < 0.9 && msCodeClone.getGlobalSimilarity() >= 0.8) {
+            msCodeClone.setTypeB(true);
             MsCache.typeB.add(msCodeClone);
         }
         if (msCodeClone.getGlobalSimilarity() <= 1.0 && msCodeClone.getGlobalSimilarity() >= 0.9) {
+            msCodeClone.setTypeA(true);
             MsCache.typeA.add(msCodeClone);
         }
-
+        if (msCodeClone.isTypeA()) {
+            System.out.println();
+        }
+        MsCache.addCodeClone(msCodeClone);
     }
 
     private double calculateGlobalSimilarity(MsCodeClone msCodeClone) {

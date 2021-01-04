@@ -19,4 +19,8 @@ public class ModuleClonePair {
     private double percentClonesModuleA;
     private double percentClonesModuleB;
 
+    @Override
+    public String toString() {
+        return moduleA + " -> " + moduleB + " : " + percentClonesModuleA;
+    }
 }
