@@ -27,6 +27,8 @@ public class CacheManager {
         writeArrayList("msModulesList", MsCache.modules);
         writeArrayList("msFlowList", MsCache.msFlows);
         writeArrayList("msCodeClones", MsCache.msCodeClones);
+        writeArrayList("msCodeClonesTypeA", MsCache.typeA);
+        writeArrayList("msCodeClonesTypeB", MsCache.typeB);
     }
 
     public <T> void writeArrayList(String name, List<T> list) {

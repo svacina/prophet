@@ -10,8 +10,8 @@ import io.quarkus.runtime.annotations.QuarkusMain;
 @QuarkusMain
 public class SemanticAnalysisCommand implements QuarkusApplication {
 
-    private String sutPath;
-    private String cachePath;
+    public static String sutPath;
+    public static String cachePath;
 
     @Override
     public int run(String... args) throws Exception {
@@ -21,8 +21,14 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
         preProcess();
         processCodeClonesFromCache();
         conductCalculation();
+        persistCache();
         System.out.println(System.currentTimeMillis() - start);
         return 0;
+    }
+
+    private void persistCache() {
+        CacheManager cacheManager = new CacheManager();
+        cacheManager.persistCache(cachePath);
     }
 
     private void conductCalculation() {
@@ -31,10 +37,11 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
     }
 
     private void initPaths(String... args) {
-//        String[] split = args[0].split(",");
-//        sutPath = split[0];
-        sutPath = "/Users/jan/Development/train-ticket/";
-        cachePath = "/Users/jan/Development/data/";
+        String[] split = args[0].split(",");
+        sutPath = split[0];
+        cachePath = split[1];
+//        sutPath = "/Users/jan/Development/train-ticket/";
+//        cachePath = "/Users/jan/Development/data/";
 //        sutPath = "C:\\git\\train-ticket";
 //        cachePath = "C:\\git\\data";
     }
@@ -48,13 +55,11 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
         ProcessFiles.run(sutPath);
         FlowBuilder flowBuilder = new FlowBuilder();
         flowBuilder.buildFlows();
-        CacheManager cacheManager = new CacheManager();
-        cacheManager.persistCache(cachePath);
     }
 
     public void processCodeClonesFromCache() {
-        CacheManager cacheManager = new CacheManager();
-        cacheManager.recreateCache(cachePath);
+//        CacheManager cacheManager = new CacheManager();
+//        cacheManager.recreateCache(cachePath);
         CodeClonesFactory codeClonesFactory = new CodeClonesFactory();
         codeClonesFactory.findCodeClones();
         ModuleClonePairFactory mcpf = new ModuleClonePairFactory();

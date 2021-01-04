@@ -27,6 +27,7 @@ public class MsCache {
     public static List<MsCodeClone> typeC;
 
     public static void init(){
+        modules = new ArrayList<>();
         msClassList = new ArrayList<>();
         msMethodList = new ArrayList<>();
         msMethodCallList = new ArrayList<>();

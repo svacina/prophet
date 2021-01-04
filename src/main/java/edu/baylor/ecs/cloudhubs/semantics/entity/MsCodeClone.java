@@ -2,8 +2,10 @@ package edu.baylor.ecs.cloudhubs.semantics.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class MsCodeClone {
+public class MsCodeClone implements Serializable {
     private MsFlowEntity a;
     private MsFlowEntity b;
     private double similarityController;

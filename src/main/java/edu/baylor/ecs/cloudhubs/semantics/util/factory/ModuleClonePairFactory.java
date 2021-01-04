@@ -1,5 +1,6 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
+import edu.baylor.ecs.cloudhubs.semantics.SemanticAnalysisCommand;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlowEntity;
 import edu.baylor.ecs.cloudhubs.semantics.entity.quantification.ModuleClonePair;
@@ -24,7 +25,7 @@ public class ModuleClonePairFactory {
 
     public void printModuleClonePairs(){
         List<ModuleClonePair> moduleClonePairs = createModuleClonePairs();
-        File csvOutputFile = new File("/Users/jan/Development/data/clones.txt");
+        File csvOutputFile = new File(SemanticAnalysisCommand.cachePath +"/module-pair-clones.txt");
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             moduleClonePairs.stream()
                     .map(this::convertToString)
