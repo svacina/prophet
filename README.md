@@ -29,7 +29,10 @@ Run on MacOS:
 sh ./mvnw compile quarkus:dev -Dquarkus.args='/pat/to/app/under/test,/path/to/output' -Ddebug=true
 ```
 
-There are 2 arguments specified in `-dDquarkus.args`. 
+There are 2 arguments specified in `-dDquarkus.args` separated by a comma. 
 
-First is path to the application that we want to analyze. We utilized project Train Ticket that can be accessed
+First is a path to the application that we want to analyze. We utilized project Train Ticket that can be accessed
 here: [https://github.com/FudanSELab/train-ticket](https://github.com/FudanSELab/train-ticket)
+
+Second argument is a path to a directory where the output of the application is going to be stored.
+
