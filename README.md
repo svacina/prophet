@@ -9,6 +9,8 @@ This project detect semantic code clones in enterprise applications.
 
 ## Reproducing results
 
+Running from the source:
+
 Change directory in the console into the cloned project.
 
 Run on Linux:
@@ -36,3 +38,15 @@ here: [https://github.com/FudanSELab/train-ticket](https://github.com/FudanSELab
 
 Second argument is a path to a directory where the output of the application is going to be stored.
 
+Note: do not set second path inside this project, it will not compile
+
+## Results
+
+Results are stored under /results directory.
+
+It contains:
+
+* module-pair-clones.txt: data on how the microservices are similar to the others
+* per module clones.txt: data on how many CFGs are contained within the microservice and what percentage
+  of those CFGs are clones
+  
