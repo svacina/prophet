@@ -1,5 +1,6 @@
 package edu.baylor.ecs.cloudhubs.semantics;
 
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.data.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.ProcessFiles;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.*;
@@ -19,9 +20,9 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
         initCache();
         initPaths(args);
         preProcess();
-        processCodeClonesFromCache();
-        conductCalculation();
-        persistCache();
+//        processCodeClonesFromCache();
+//        conductCalculation();
+//        persistCache();
         System.out.println(System.currentTimeMillis() - start);
         return 0;
     }
@@ -49,6 +50,7 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
 
     public void initCache(){
         MsCache.init();
+        EntityCache.init();
     }
 
     public void preProcess() {

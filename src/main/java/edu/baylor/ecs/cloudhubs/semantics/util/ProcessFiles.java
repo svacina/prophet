@@ -24,6 +24,9 @@ public class ProcessFiles {
             if (path.contains("Repository") && (!path.contains("Test"))) {
                 role = MsClassRoles.REPOSITORY;
             }
+            if (path.contains("entity") && (!path.contains("Test"))) {
+                role = MsClassRoles.ENTITY;
+            }
             MsId msId = new MsId(path);
             if (role != null) {
                 if (role.equals(MsClassRoles.CONTROLLER) || role.equals(MsClassRoles.SERVICE)) {
@@ -40,8 +43,11 @@ public class ProcessFiles {
                     MsVisitor.visitClass(file, path, role, msId);
                     // METHOD
                     MsVisitor.visitMethods(file, role, path, msId);
-                } else if (path.contains("entity")) {
-                    // visitFieldDeclaration
+                } else if (role.equals(MsClassRoles.ENTITY)) {
+                    // CLASS
+                    MsVisitor.visitClass(file, path, role, msId);
+                    // FIELDS
+                    MsVisitor.visitFields(file, path, msId);
                 }
             } else {
 //                System.out.println();

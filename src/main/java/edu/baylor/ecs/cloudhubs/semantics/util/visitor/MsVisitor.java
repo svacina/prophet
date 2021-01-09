@@ -11,11 +11,18 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.constructs.MsMethodBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.RestAnnotationDetector;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * MsVisitor -> visitClass
+ * MsVisitor -> visitMethod
+ * MsVisitor -> visitMethodCalls
+ * MsVisitor -> visitFields
+ */
 public class MsVisitor {
 
     public static void visitClass(File file, String path, MsClassRoles role, MsId msId) {
@@ -24,41 +31,14 @@ public class MsVisitor {
                 @Override
                 public void visit(ClassOrInterfaceDeclaration n, Object arg) {
                     super.visit(n, arg);
-                    MsClass msClass = new MsClass();
-                    msClass.setClassName(n.getNameAsString());
-                    Optional<Node> parentNode = n.getParentNode();
-                    if (parentNode.isPresent()) {
-                        CompilationUnit cu = (CompilationUnit) parentNode.get();
-                        Optional<PackageDeclaration> pd = cu.getPackageDeclaration();
-                        pd.ifPresent(packageDeclaration -> msClass.setPackageName(packageDeclaration.getNameAsString()));
-                    }
-                    NodeList<AnnotationExpr> nl = n.getAnnotations();
-                    msClass.setRole(role);
-                    for (AnnotationExpr annotationExpr : nl) {
-                        if (annotationExpr.getNameAsString().equals("Service")){
-                            msClass.setRole(MsClassRoles.SERVICE);
-                        }
-                        if (annotationExpr.getNameAsString().equals("RestController")){
-                            msClass.setRole(MsClassRoles.CONTROLLER);
-                            // get annotation request mapping and value
-                        }
-                        if (annotationExpr.getNameAsString().equals("Repository")){
-                            msClass.setRole(MsClassRoles.REPOSITORY);
-                        }
-                    }
-                    if (nl.size() == 0 && n.getNameAsString().contains("Service")) {
-                        msClass.setRole(MsClassRoles.SERVICE_INTERFACE);
-                    }
-
-                    msClass.setIds();
-                    msClass.setMsId(msId);
-                    MsCache.addMsClass(msClass);
+                    MsClassVisitor.visitClass(n, msId, role);
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     public static void visitMethods(File file, MsClassRoles role, String path, MsId msId) {
         try {
@@ -67,9 +47,9 @@ public class MsVisitor {
                 public void visit(MethodDeclaration n, Object arg) {
                     super.visit(n, arg);
                     MsMethodBuilder.buildMsMethod(n, role, path, msId);
+                    RestAnnotationDetector.missingRestAnnotation(n, msId);
                 }
             }.visit(StaticJavaParser.parse(file), null);
-            // System.out.println(); // empty line
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -146,7 +126,6 @@ public class MsVisitor {
                     MsFieldVisitor.visitFieldDeclaration(n, path, msId);
                 }
             }.visit(StaticJavaParser.parse(file), null);
-            // System.out.println(); // empty line
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

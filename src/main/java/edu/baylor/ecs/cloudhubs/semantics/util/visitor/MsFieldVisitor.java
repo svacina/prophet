@@ -5,10 +5,20 @@ import com.github.javaparser.ast.body.VariableDeclarator;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsField;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFieldBuilder;
 
+/**
+ * Creates MsField for CodeClones
+ * Finds EntityField for Inconsistencies
+ */
 public class MsFieldVisitor {
 
     public static void visitFieldDeclaration(FieldDeclaration n, String path, MsId msId) {
+        findEntityField(n, msId);
+        createMsField(n, msId);
+    }
+
+    private static void createMsField(FieldDeclaration n, MsId msId){
         MsField msField = new MsField();
         if (n.getVariables().size() > 0) {
             VariableDeclarator vd = n.getVariables().get(0);
@@ -26,6 +36,10 @@ public class MsFieldVisitor {
         }
     }
 
+    private static void findEntityField(FieldDeclaration n, MsId msId) {
+        EntityFieldBuilder builder = new EntityFieldBuilder();
+        builder.find(n, msId);
+    }
 }
 
 

@@ -16,6 +16,7 @@ public class MsMethodBuilder {
 
 
     public static void buildMsMethod(MethodDeclaration n, MsClassRoles role, String path, MsId msId){
+
         MsMethod msMethod = new MsMethod();
         // Set Return Type
         msMethod.setReturnType(n.getTypeAsString());
