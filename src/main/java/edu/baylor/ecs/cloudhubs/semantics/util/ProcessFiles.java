@@ -48,6 +48,10 @@ public class ProcessFiles {
                     MsVisitor.visitClass(file, path, role, msId);
                     // FIELDS
                     MsVisitor.visitFields(file, path, msId);
+                    // ENTITY CLASS
+                    MsVisitor.visitEntityClass(file, path, role, msId);
+                    // ENTITY FIELD
+                    MsVisitor.visitEntityFields(file, path, msId);
                 }
             } else {
 //                System.out.println();

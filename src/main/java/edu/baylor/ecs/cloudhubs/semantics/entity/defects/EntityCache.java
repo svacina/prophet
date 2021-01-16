@@ -1,7 +1,5 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.data;
+package edu.baylor.ecs.cloudhubs.semantics.entity.defects;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.model.MsEntityField;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.model.MsEntityClass;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,11 +8,15 @@ import java.util.Optional;
 
 @Data
 public class EntityCache {
+
     public static List<MsEntityField> entityFields;
     public static List<MsEntityClass> entityClasses;
+    public static List<EntityCluster> entityClusterList;
+
     public static void init(){
         entityClasses = new ArrayList<>();
         entityFields = new ArrayList<>();
+        entityClusterList = new ArrayList<>();
     }
 
     public static void addEntityField(MsEntityField msEntityField) {
@@ -22,4 +24,5 @@ public class EntityCache {
         msEntityClass.ifPresent(entityClass -> entityClass.addField(msEntityField));
         entityFields.add(msEntityField);
     }
+
 }

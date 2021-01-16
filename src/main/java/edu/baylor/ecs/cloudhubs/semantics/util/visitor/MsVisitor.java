@@ -12,6 +12,8 @@ import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.constructs.MsMethodBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.RestAnnotationDetector;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityClassBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFieldBuilder;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +40,21 @@ public class MsVisitor {
             throw new RuntimeException(e);
         }
     }
+
+    public static void visitEntityClass(File file, String path, MsClassRoles role, MsId msId) {
+        try {
+            new VoidVisitorAdapter<Object>() {
+                @Override
+                public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+                    super.visit(n, arg);
+                    EntityClassBuilder.find(n, msId);
+                }
+            }.visit(StaticJavaParser.parse(file), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
     public static void visitMethods(File file, MsClassRoles role, String path, MsId msId) {
@@ -124,6 +141,21 @@ public class MsVisitor {
                 public void visit(FieldDeclaration n, Object arg) {
                     super.visit(n, arg);
                     MsFieldVisitor.visitFieldDeclaration(n, path, msId);
+                }
+            }.visit(StaticJavaParser.parse(file), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void visitEntityFields(File file, String path, MsId msId) {
+        try {
+            new VoidVisitorAdapter<Object>() {
+                @Override
+                public void visit(FieldDeclaration n, Object arg) {
+                    super.visit(n, arg);
+                    EntityFieldBuilder builder = new EntityFieldBuilder();
+                    builder.find(n, msId);
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {

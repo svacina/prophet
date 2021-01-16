@@ -13,7 +13,7 @@ public class MsClass implements Serializable {
     private String className;
     private List<String> fieldNames;
     private MsClassRoles role;
-
+    private String code;
 
 
     public void setIds(){

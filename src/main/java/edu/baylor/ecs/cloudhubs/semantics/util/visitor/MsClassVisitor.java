@@ -1,5 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.visitor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
@@ -21,7 +23,6 @@ public class MsClassVisitor {
      * Find MsClass
      */
     public static void visitClass(ClassOrInterfaceDeclaration n, MsId msId, MsClassRoles role) {
-        EntityClassBuilder.find(n, msId);
         findMsClass(n, msId, role);
     }
 
@@ -36,6 +37,15 @@ public class MsClassVisitor {
         }
         NodeList<AnnotationExpr> nl = n.getAnnotations();
         msClass.setRole(role);
+        if (n.getTokenRange().isPresent()) {
+            try {
+                String str = new ObjectMapper().writeValueAsString(n.getTokenRange().get().toString());
+                String str2 = n.getTokenRange().get().toString();
+                msClass.setCode("");
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
         for (AnnotationExpr annotationExpr : nl) {
             if (annotationExpr.getNameAsString().equals("Service")){
                 msClass.setRole(MsClassRoles.SERVICE);
@@ -46,6 +56,9 @@ public class MsClassVisitor {
             }
             if (annotationExpr.getNameAsString().equals("Repository")){
                 msClass.setRole(MsClassRoles.REPOSITORY);
+            }
+            if (annotationExpr.getNameAsString().equals("Data")){
+                msClass.setRole(MsClassRoles.ENTITY);
             }
         }
         if (nl.size() == 0 && n.getNameAsString().contains("Service")) {

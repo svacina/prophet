@@ -1,6 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.data.EntityCache;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.MainDriver;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.ProcessFiles;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.*;
@@ -17,9 +18,11 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
     @Override
     public int run(String... args) throws Exception {
         long start = System.currentTimeMillis();
-        initCache();
-        initPaths(args);
-        preProcess();
+        MainDriver md = new MainDriver();
+        md.process(args);
+//        initCache();
+//        initPaths(args);
+//        preProcess();
 //        processCodeClonesFromCache();
 //        conductCalculation();
 //        persistCache();
@@ -41,6 +44,7 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
         String[] split = args[0].split(",");
         sutPath = split[0];
         cachePath = split[1];
+        System.out.println(sutPath + " " + cachePath);
 //        sutPath = "/Users/jan/Development/train-ticket/";
 //        cachePath = "/Users/jan/Development/data/";
 //        sutPath = "C:\\git\\train-ticket";

@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.model;
+package edu.baylor.ecs.cloudhubs.semantics.entity.defects;
 
 import lombok.Data;
 
@@ -7,6 +7,8 @@ import java.util.List;
 
 @Data
 public class MsEntityField {
+    private String name;
+    private String type;
     private String path;
     private String code;
     private String lineNumber;

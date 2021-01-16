@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.model;
+package edu.baylor.ecs.cloudhubs.semantics.entity.defects;
 
 import lombok.Data;
 
@@ -8,12 +8,14 @@ import java.util.List;
 @Data
 public class MsEntityClass {
     private String path;
+    private String name;
     private String code;
     private boolean isEnum;
     private String data;
     private String document;
     private String collectionName;
     private List<MsEntityField> fields;
+    private EntityDefect defect;
 
     public MsEntityClass() {
         fields = new ArrayList<>();

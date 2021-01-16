@@ -14,7 +14,6 @@ import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFie
 public class MsFieldVisitor {
 
     public static void visitFieldDeclaration(FieldDeclaration n, String path, MsId msId) {
-        findEntityField(n, msId);
         createMsField(n, msId);
     }
 
@@ -36,10 +35,7 @@ public class MsFieldVisitor {
         }
     }
 
-    private static void findEntityField(FieldDeclaration n, MsId msId) {
-        EntityFieldBuilder builder = new EntityFieldBuilder();
-        builder.find(n, msId);
-    }
+
 }
 
 

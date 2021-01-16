@@ -4,8 +4,8 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MemberValuePair;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.data.EntityCache;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.entity.model.MsEntityClass;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.MsEntityClass;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
 
 public class EntityClassBuilder {
@@ -13,6 +13,7 @@ public class EntityClassBuilder {
         if (msId.getPath().contains("entity")) {
             MsEntityClass msEntityClass = new MsEntityClass();
             msEntityClass.setPath(msId.getPath());
+            msEntityClass.setName(n.getNameAsString());
             if (n.getTokenRange().isPresent()) {
                 msEntityClass.setCode(n.getTokenRange().get().toString());
                 msEntityClass.setEnum(msEntityClass.getCode().equals("enum"));
