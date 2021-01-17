@@ -13,12 +13,16 @@ public class MsEntityField {
     private String code;
     private String lineNumber;
     private List<String> annotations;
+    private List<String> missingAnnotations;
 
     public MsEntityField(){
         annotations = new ArrayList<>();
+        missingAnnotations = new ArrayList<>();
     }
 
     public void addAnnotation(String s) {
         annotations.add(s);
     }
+
+    public void addMissingAnnotation(String s) { missingAnnotations.add(s); }
 }

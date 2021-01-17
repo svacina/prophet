@@ -4,6 +4,7 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.CodeClonesFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.ModuleClonePairFactory;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.CacheManager;
 import edu.baylor.ecs.cloudhubs.semantics.util.file.PathManager;
 
 public class MainDriver {
@@ -18,20 +19,16 @@ public class MainDriver {
         PathManager.cachePath = split[1];
         // basic files
         ProcessFiles.run(PathManager.sutPath);
-
-        /**
-         * code clones begin
-         */
+        // code clones
 //        processCodeClones();
-        /**
-         * code clones end
-         */
-        EntityClusterManager ecm = new EntityClusterManager();
-        ecm.generateDefects();
+        // inconsistencies
+        processInconsistencies();
+        // cache
+        persistCache();
 
     }
 
-    public void processCodeClones(){
+    public void processCodeClones() {
         // flows
         FlowBuilder flowBuilder = new FlowBuilder();
         flowBuilder.buildFlows();
@@ -41,5 +38,17 @@ public class MainDriver {
         // analyze code clones
         ModuleClonePairFactory mcpf = new ModuleClonePairFactory();
         mcpf.printModuleClonePairs();
+    }
+
+
+    public void processInconsistencies() {
+        EntityClusterManager ecm = new EntityClusterManager();
+        ecm.generateDefects();
+    }
+
+    private void persistCache() {
+        CacheManager cacheManager = new CacheManager();
+//        cacheManager.persistCache(PathManager.cachePath);
+        cacheManager.persistInconsistencies(PathManager.cachePath);
     }
 }

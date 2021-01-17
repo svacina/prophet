@@ -3,6 +3,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util.file;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 
@@ -29,6 +30,11 @@ public class CacheManager {
         writeArrayList("msCodeClones", MsCache.msCodeClones);
         writeArrayList("msCodeClonesTypeA", MsCache.typeA);
         writeArrayList("msCodeClonesTypeB", MsCache.typeB);
+    }
+
+    public void persistInconsistencies(String path) {
+        this.path = path;
+        writeArrayList("entityClusterList", EntityCache.entityClusterList);
     }
 
     public <T> void writeArrayList(String name, List<T> list) {

@@ -2,19 +2,16 @@ package edu.baylor.ecs.cloudhubs.semantics.util;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCluster;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityDefect;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.UniqueEntityField;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class EntityClusterManager {
 
     public void generateDefects(){
         clusterEntities();
         getUniqueFields();
-        yieldDefects();
+        yieldMissingAnnotationsPerField();
+        yieldMissingFieldsPer();
     }
 
     public void clusterEntities(){
@@ -37,31 +34,22 @@ public class EntityClusterManager {
         });
     }
 
-    public void yieldDefects(){
-//        EntityCache.entityClusterList.forEach(n -> {
-//            List<EntityDefect> defects = getDefects(n);
-//            n.setDefects(defects);
-//        });
-    }
-
-    /* Compare unique fields */
-    /* Compare annotations per field */
-    private List<EntityDefect> getDefects(EntityCluster entityCluster) {
-        /* for each unique field look at every class and every field in that class
-        * and compare the fields and annotations in that class with unique one*/
-        entityCluster.getUniqueFields().forEach(uniqueEntityField -> {
-            List<EntityDefect> defects = new ArrayList<>();
-            entityCluster.getMsEntities().forEach(msEntityClass -> {
-                EntityDefect defect = new EntityDefect();
-                msEntityClass.getFields().forEach(msEntityField -> {
-                    // here compare those two
-
+    public void yieldMissingAnnotationsPerField(){
+        EntityCache.entityClusterList.forEach(n -> {
+            n.getMsEntities().forEach(m -> {
+                m.getFields().forEach(f -> {
+                    Optional<UniqueEntityField> op = n.getUniqueFields()
+                            .stream()
+                            .filter(u -> u.getType().equals(f.getType()) && u.getName().equals(f.getName()))
+                            .findFirst();
+                    if (op.isPresent()) {
+                        UniqueEntityField uf = op.get();
+                        f.setMissingAnnotations(new ArrayList<>(com.google.common.collect.Sets.difference(uf.getAnnotationsHashSet(), new HashSet<String>(f.getAnnotations()))));
+                    }
                 });
             });
         });
-        return null;
     }
-
 
     private List<UniqueEntityField> getUniqueEntityFields(EntityCluster entityCluster) {
         List<UniqueEntityField> uef = new ArrayList<>();
@@ -87,4 +75,18 @@ public class EntityClusterManager {
         return uef;
     }
 
+    private void yieldMissingFieldsPer() {
+        EntityCache.entityClusterList.forEach(n -> {
+            n.getMsEntities().forEach(m -> {
+                m.getFields().forEach(f -> {
+                    n.getUniqueFields().forEach(u -> {
+                        if (!(u.getName().equals(f.getName()) && u.getType().equals(f.getType()))){
+                            System.out.println("missing field");
+
+                        }
+                    });
+                });
+            });
+        });
+    }
 }

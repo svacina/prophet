@@ -16,9 +16,15 @@ public class MsEntityClass {
     private String collectionName;
     private List<MsEntityField> fields;
     private EntityDefect defect;
+    private List<UniqueEntityField> missingFields;
 
     public MsEntityClass() {
         fields = new ArrayList<>();
+        missingFields = new ArrayList<>();
+    }
+
+    public void addMissingField(UniqueEntityField uniqueEntityField) {
+        missingFields.add(uniqueEntityField);
     }
 
     public void addField(MsEntityField msEntityField) {
