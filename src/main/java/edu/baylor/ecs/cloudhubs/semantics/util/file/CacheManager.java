@@ -38,7 +38,7 @@ public class CacheManager {
     }
 
     public <T> void writeArrayList(String name, List<T> list) {
-        try (FileWriter writer = new FileWriter(path +"/" + name + ".txt");
+        try (FileWriter writer = new FileWriter(path +"/" + name + ".json");
              BufferedWriter bw = new BufferedWriter(writer)) {
                 Gson gson = new Gson();
                 String jsonString = gson.toJson(list);

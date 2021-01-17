@@ -81,8 +81,7 @@ public class EntityClusterManager {
                 m.getFields().forEach(f -> {
                     n.getUniqueFields().forEach(u -> {
                         if (!(u.getName().equals(f.getName()) && u.getType().equals(f.getType()))){
-                            System.out.println("missing field");
-
+//                            System.out.println("missing field");
                         }
                     });
                 });
