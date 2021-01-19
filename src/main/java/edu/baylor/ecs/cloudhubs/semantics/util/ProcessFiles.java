@@ -60,6 +60,24 @@ public class ProcessFiles {
         // PRINT CACHE
     }
 
+//    public static void run(String[] paths) {
+//        List<String> dire
+//        for (String s: paths
+//             ) {
+//            String myDirectoryPath = s;
+//            File file = new File(myDirectoryPath);
+//            String[] directories = file.list(new FilenameFilter() {
+//                @Override
+//                public boolean accept(File current, String name) {
+//                    boolean isDirectory = new File(current, name).isDirectory();
+//                    boolean isModule = name.contains("ts");
+//                    return isDirectory && isModule;
+//                }
+//            });
+//
+//        }
+//    }
+
     public static void run(String path) {
 
         String myDirectoryPath = path;
