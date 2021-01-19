@@ -17,6 +17,9 @@ public class MsEntityClass {
     private List<MsEntityField> fields;
     private EntityDefect defect;
     private List<UniqueEntityField> missingFields;
+    private boolean hasMissingFiledAnnotations;
+    private boolean hasMissingField;
+
 
     public MsEntityClass() {
         fields = new ArrayList<>();

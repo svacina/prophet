@@ -2,6 +2,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCluster;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.MsEntityField;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.UniqueEntityField;
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class EntityClusterManager {
         getUniqueFields();
         yieldMissingAnnotationsPerField();
         yieldMissingFieldsPer();
+        yieldMissingFields();
     }
 
     public void clusterEntities(){
@@ -34,17 +36,44 @@ public class EntityClusterManager {
         });
     }
 
+    public void yieldMissingFields(){
+        EntityCache.entityClusterList.forEach(n -> {
+
+            n.getUniqueFields().forEach(u -> {
+                n.getMsEntities().forEach(m -> {
+                    // find in unique fields those guys that
+                    Optional<MsEntityField> op = m.getFields()
+                            .stream()
+                            .filter(b -> b.getType().equals(u.getType()) && b.getName().equals(u.getName()))
+                            .findFirst();
+                    if (op.isEmpty()) {
+                        m.addMissingField(u);
+                        m.setHasMissingField(true);
+                    }
+                });
+            });
+
+
+        });
+    }
+
     public void yieldMissingAnnotationsPerField(){
         EntityCache.entityClusterList.forEach(n -> {
             n.getMsEntities().forEach(m -> {
                 m.getFields().forEach(f -> {
-                    Optional<UniqueEntityField> op = n.getUniqueFields()
-                            .stream()
-                            .filter(u -> u.getType().equals(f.getType()) && u.getName().equals(f.getName()))
-                            .findFirst();
-                    if (op.isPresent()) {
-                        UniqueEntityField uf = op.get();
-                        f.setMissingAnnotations(new ArrayList<>(com.google.common.collect.Sets.difference(uf.getAnnotationsHashSet(), new HashSet<String>(f.getAnnotations()))));
+                    if (m.getDocument() != null && !(m.getDocument().equals(""))) {
+                        Optional<UniqueEntityField> op = n.getUniqueFields()
+                                .stream()
+                                .filter(u -> u.getType().equals(f.getType()) && u.getName().equals(f.getName()))
+                                .findFirst();
+                        if (op.isPresent()) {
+                            UniqueEntityField uf = op.get();
+                            f.setMissingAnnotations(new ArrayList<>(com.google.common.collect.Sets.difference(uf.getAnnotationsHashSet(), new HashSet<String>(f.getAnnotations()))));
+                            if (f.getMissingAnnotations().size() > 0) {
+                                m.setHasMissingFiledAnnotations(true);
+                                n.setHasMissingFiledAnnotations(true);
+                            }
+                        }
                     }
                 });
             });

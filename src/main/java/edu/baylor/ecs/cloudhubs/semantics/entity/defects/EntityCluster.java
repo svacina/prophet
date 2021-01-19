@@ -10,7 +10,7 @@ public class EntityCluster {
     private String name;
     private List<MsEntityClass> msEntities;
     private List<UniqueEntityField> uniqueFields;
-
+    private boolean hasMissingFiledAnnotations;
 
     public EntityCluster(String name){
         msEntities = new ArrayList<>();
