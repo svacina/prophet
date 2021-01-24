@@ -19,6 +19,7 @@ public class MsFieldVisitor {
 
     private static void createMsField(FieldDeclaration n, MsId msId){
         MsField msField = new MsField();
+        msField.setCode(n.getTokenRange().get().toString());
         if (n.getVariables().size() > 0) {
             VariableDeclarator vd = n.getVariables().get(0);
             String variableName = vd.getNameAsString();

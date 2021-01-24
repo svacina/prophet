@@ -88,7 +88,7 @@ public class MsVisitor {
                             String name = fae.getNameAsString();
                             if (name.toLowerCase().contains("repository")){
                                 MsMethodCall msMethodCall = new MsMethodCall();
-
+                                msMethodCall.setCode(n.getTokenRange().get().toString());
                                 msMethodCall.setLineNumber(lineNumber);
                                 msMethodCall.setStatementDeclaration(n.toString());
                                 msMethodCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
@@ -103,7 +103,7 @@ public class MsVisitor {
                             if (name.toLowerCase().contains("service")) {
                                 // service is being called
                                 MsMethodCall msMethodCall = new MsMethodCall();
-
+                                msMethodCall.setCode(n.getTokenRange().get().toString());
                                 msMethodCall.setLineNumber(lineNumber);
                                 msMethodCall.setStatementDeclaration(n.toString());
                                 msMethodCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
@@ -117,6 +117,7 @@ public class MsVisitor {
                             } else if (name.equals("restTemplate")) {
                                 // rest template is being called
                                 MsRestCall msRestCall = MsRestCallFactory.getMsRestCall(n);
+                                msRestCall.setCode(n.getTokenRange().get().toString());
                                 msRestCall.setLineNumber(lineNumber);
                                 msRestCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
                                 msRestCall.setParentClassId();

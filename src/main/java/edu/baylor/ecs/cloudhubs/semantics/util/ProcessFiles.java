@@ -10,6 +10,17 @@ import java.util.Arrays;
 
 public class ProcessFiles {
 
+    public static boolean isJava = false;
+
+    public static boolean detectJavaFiles(File projectDir) {
+        new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
+            isJava = true;
+        }).explore(projectDir);
+        boolean toReturn = isJava;
+        isJava = false;
+        return toReturn;
+    }
+
     public static void processFile(File projectDir) {
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
 //            System.out.println(path);
@@ -85,14 +96,19 @@ public class ProcessFiles {
         String[] directories = file.list(new FilenameFilter() {
             @Override
             public boolean accept(File current, String name) {
-                boolean isDirectory = new File(current, name).isDirectory();
-                boolean isModule = name.contains("ts");
+                File currentFile = new File(current, name);
+                boolean isDirectory = currentFile.isDirectory();
+                //boolean isModule = name.contains("ts");
+                boolean isModule = false;
+                if (isDirectory) {
+                    isModule = detectJavaFiles(currentFile);
+                }
                 return isDirectory && isModule;
             }
         });
         MsCache.modules = Arrays.asList(directories);
         File projectDir = new File(path);
         processFile(projectDir);
-//        System.out.println();
+        System.out.println();
     }
 }

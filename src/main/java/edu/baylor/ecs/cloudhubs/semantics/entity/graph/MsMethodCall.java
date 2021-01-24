@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class MsMethodCall {
     private MsId msId;
+    private String code;
     private String parentPackageName;
     private String parentClassName;
     private String parentMethodName;

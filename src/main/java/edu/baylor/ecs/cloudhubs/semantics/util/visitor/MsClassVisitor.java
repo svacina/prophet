@@ -29,6 +29,7 @@ public class MsClassVisitor {
     private static void findMsClass(ClassOrInterfaceDeclaration n, MsId msId, MsClassRoles role) {
         MsClass msClass = new MsClass();
         msClass.setClassName(n.getNameAsString());
+        msClass.setCode(n.getTokenRange().get().toString());
         Optional<Node> parentNode = n.getParentNode();
         if (parentNode.isPresent()) {
             CompilationUnit cu = (CompilationUnit) parentNode.get();

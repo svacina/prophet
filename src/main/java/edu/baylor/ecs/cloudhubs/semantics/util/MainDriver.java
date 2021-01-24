@@ -20,9 +20,9 @@ public class MainDriver {
         // basic files
         ProcessFiles.run(PathManager.sutPath);
         // code clones
-//        processCodeClones();
+        processCodeClones();
         // inconsistencies
-        processInconsistencies();
+//        processInconsistencies();
         // cache
         persistCache();
 
@@ -48,7 +48,7 @@ public class MainDriver {
 
     private void persistCache() {
         CacheManager cacheManager = new CacheManager();
-//        cacheManager.persistCache(PathManager.cachePath);
+        cacheManager.persistCache(PathManager.cachePath);
         cacheManager.persistInconsistencies(PathManager.cachePath);
     }
 }

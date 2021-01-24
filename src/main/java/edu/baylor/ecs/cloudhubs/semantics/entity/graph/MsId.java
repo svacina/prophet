@@ -16,11 +16,12 @@ public class MsId {
 
     public void setPath(String path) {
         this.path = path;
-        String[] split = path.split("/");
-        String[] subarr = Arrays.asList(split)
-                .subList(0, 6)
-                .toArray(new String[0]);
-        directoryName = String.join("/", subarr);
+//        String[] split = path.split("/");
+//        String[] subarr = Arrays.asList(split)
+//                .subList(0, 6)
+//                .toArray(new String[0]);
+//        directoryName = String.join("/", subarr);
+        directoryName = "";
 //        System.out.printf("");
     }
 }

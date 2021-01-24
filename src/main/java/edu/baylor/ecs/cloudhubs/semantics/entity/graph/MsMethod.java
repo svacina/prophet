@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class MsMethod {
     private MsId msId;
+    private String code;
     private String protection;
     private String returnType;
     private String methodName;

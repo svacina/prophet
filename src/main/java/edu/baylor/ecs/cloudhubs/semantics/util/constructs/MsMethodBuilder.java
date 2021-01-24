@@ -24,6 +24,8 @@ public class MsMethodBuilder {
         msMethod.setMethodName(n.getNameAsString());
         // Set Line
         msMethod.setLine(n.getBegin().get().line);
+        // Set Code
+        msMethod.setCode(n.getTokenRange().get().toString());
         // Set Modifiers
         NodeList<Modifier> modifiers = n.getModifiers();
         // Set Arguments
