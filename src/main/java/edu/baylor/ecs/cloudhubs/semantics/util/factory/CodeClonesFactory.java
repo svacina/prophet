@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class CodeClonesFactory {
 
     public void findCodeClones() {
-
+        int counter = 0;
         for (int i = 0; i < MsCache.modules.size() -1; i++) {
             for (int j = i + 1; j < MsCache.modules.size(); j++) {
                 String iModule = MsCache.modules.get(i);
@@ -21,6 +21,7 @@ public class CodeClonesFactory {
                 // compare each flow from i with each flow from j
                 for (int k = 0; k < iFlows.size(); k++) {
                     for (int l = 0; l < jFlows.size(); l++) {
+                        counter += 1;
                         MsFlowEntity kFlow = iFlows.get(k);
                         MsFlowEntity lFlow = jFlows.get(l);
                         MsCodeClone msCodeClone = new MsCodeClone();
@@ -48,6 +49,7 @@ public class CodeClonesFactory {
                 }
             }
         }
+        System.out.println(counter);
     }
 
     private void classifyCodeClones(MsCodeClone msCodeClone) {

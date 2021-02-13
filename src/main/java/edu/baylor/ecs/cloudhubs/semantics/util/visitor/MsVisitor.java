@@ -8,6 +8,7 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
+import edu.baylor.ecs.cloudhubs.semantics.util.MissingAnnotationDetector;
 import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.constructs.MsMethodBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
@@ -26,6 +27,20 @@ import java.util.Optional;
  * MsVisitor -> visitFields
  */
 public class MsVisitor {
+
+    public static void visitMissingAnnotation(File file, String path, MsClassRoles role, MsId msId) {
+        try {
+            new VoidVisitorAdapter<Object>() {
+                @Override
+                public void visit(ClassOrInterfaceDeclaration n, Object arg) {
+                    super.visit(n, arg);
+                    MissingAnnotationDetector.findMissingAnnotation(n, msId, role);
+                }
+            }.visit(StaticJavaParser.parse(file), null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void visitClass(File file, String path, MsClassRoles role, MsId msId) {
         try {

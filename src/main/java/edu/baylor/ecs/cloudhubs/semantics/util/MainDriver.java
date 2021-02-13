@@ -1,5 +1,6 @@
 package edu.baylor.ecs.cloudhubs.semantics.util;
 
+import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.CodeClonesFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowBuilder;
@@ -21,11 +22,27 @@ public class MainDriver {
         ProcessFiles.run(PathManager.sutPath);
         // code clones
         processCodeClones();
+        // print code clones
+        printCodeClones();
         // inconsistencies
-//        processInconsistencies();
+        // processInconsistencies();
         // cache
-        persistCache();
+        // persistCache();
+    }
 
+    public void printCodeClones(){
+        for (MsCodeClone msCodeClone :MsCache.typeB
+             ) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(msCodeClone.getA().getMsController().getClassName());
+            sb.append(".");
+            sb.append(msCodeClone.getA().getMsControllerMethod().getMethodName());
+            sb.append("->");
+            sb.append(msCodeClone.getB().getMsController().getClassName());
+            sb.append(".");
+            sb.append(msCodeClone.getB().getMsControllerMethod().getMethodName());
+            System.out.println(sb.toString());
+        }
     }
 
     public void processCodeClones() {
@@ -36,8 +53,9 @@ public class MainDriver {
         CodeClonesFactory codeClonesFactory = new CodeClonesFactory();
         codeClonesFactory.findCodeClones();
         // analyze code clones
-        ModuleClonePairFactory mcpf = new ModuleClonePairFactory();
-        mcpf.printModuleClonePairs();
+//        ModuleClonePairFactory mcpf = new ModuleClonePairFactory();
+//        mcpf.printModuleClonePairs();
+//        mcpf.addIds();
     }
 
 

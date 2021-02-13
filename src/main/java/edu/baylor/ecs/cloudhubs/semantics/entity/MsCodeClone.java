@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class MsCodeClone implements Serializable {
+    private int id;
     private MsFlowEntity a;
     private MsFlowEntity b;
     private double similarityController;

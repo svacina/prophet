@@ -130,4 +130,17 @@ public class ModuleClonePairFactory {
         }
 
     }
+
+    public void addIds() {
+        int counter = 1;
+        for (MsCodeClone m: MsCache.typeA
+             ) {
+            m.setId(counter);
+            counter += 1;
+        }
+        for (MsCodeClone m: MsCache.typeB) {
+            m.setId(counter);
+            counter += 1;
+        }
+    }
 }

@@ -25,6 +25,7 @@ public class ProcessFiles {
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
 //            System.out.println(path);
 //            System.out.println(Strings.repeat("=", path.length()));
+
             MsClassRoles role = null;
             if (path.contains("Controller") && (!path.contains("Test"))){
                 role = MsClassRoles.CONTROLLER;
@@ -38,7 +39,9 @@ public class ProcessFiles {
             if (path.contains("entity") && (!path.contains("Test"))) {
                 role = MsClassRoles.ENTITY;
             }
+
             MsId msId = new MsId(path);
+            MsVisitor.visitMissingAnnotation(file, path, role,msId);
             if (role != null) {
                 if (role.equals(MsClassRoles.CONTROLLER) || role.equals(MsClassRoles.SERVICE)) {
                     // CLASS
