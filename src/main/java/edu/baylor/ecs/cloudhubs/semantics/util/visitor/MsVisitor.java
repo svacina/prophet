@@ -15,6 +15,7 @@ import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.RestAnnotationDetector;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityClassBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFieldBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,6 +81,7 @@ public class MsVisitor {
                     super.visit(n, arg);
                     MsMethodBuilder.buildMsMethod(n, role, path, msId);
                     RestAnnotationDetector.missingRestAnnotation(n, msId);
+                    StatManager.methods += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {
@@ -93,6 +95,7 @@ public class MsVisitor {
                 @Override
                 public void visit(MethodCallExpr n, Object arg) {
                     super.visit(n, arg);
+                    StatManager.methodCalls += 1;
                     Optional<Expression> scope = n.getScope();
                     if (scope.isPresent()) {
                         if (scope.get() instanceof  NameExpr) {
@@ -157,6 +160,7 @@ public class MsVisitor {
                 public void visit(FieldDeclaration n, Object arg) {
                     super.visit(n, arg);
                     MsFieldVisitor.visitFieldDeclaration(n, path, msId);
+                    StatManager.fields += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {
@@ -172,6 +176,7 @@ public class MsVisitor {
                     super.visit(n, arg);
                     EntityFieldBuilder builder = new EntityFieldBuilder();
                     builder.find(n, msId);
+                    StatManager.fields += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {

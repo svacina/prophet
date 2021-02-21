@@ -19,7 +19,7 @@ public class MsEntityClass {
     private List<UniqueEntityField> missingFields;
     private boolean hasMissingFiledAnnotations;
     private boolean hasMissingField;
-
+    private boolean hasValidationAnnotations;
 
     public MsEntityClass() {
         fields = new ArrayList<>();

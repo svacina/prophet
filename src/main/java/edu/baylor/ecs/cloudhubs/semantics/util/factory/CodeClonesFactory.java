@@ -49,7 +49,7 @@ public class CodeClonesFactory {
                 }
             }
         }
-        System.out.println(counter);
+//        System.out.println(counter);
     }
 
     private void classifyCodeClones(MsCodeClone msCodeClone) {
@@ -78,7 +78,7 @@ public class CodeClonesFactory {
             MsCache.typeA.add(msCodeClone);
         }
         if (msCodeClone.isTypeA()) {
-            System.out.println();
+//            System.out.println();
         }
         MsCache.addCodeClone(msCodeClone);
     }

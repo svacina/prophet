@@ -1,9 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCluster;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.MsEntityField;
-import edu.baylor.ecs.cloudhubs.semantics.entity.defects.UniqueEntityField;
+import edu.baylor.ecs.cloudhubs.semantics.entity.defects.*;
+
 import java.util.*;
 
 public class EntityClusterManager {
@@ -14,6 +12,58 @@ public class EntityClusterManager {
         yieldMissingAnnotationsPerField();
         yieldMissingFieldsPer();
         yieldMissingFields();
+        yieldAnnotationsWithoutEntity();
+        listInconsistencies();
+    }
+
+    private void listInconsistencies() {
+        EntityCache.entityClusterList.forEach(n -> {
+            if (n.isHasMissingFiledAnnotations()) {
+                n.getMsEntities().forEach(e -> {
+                    if (e.isHasMissingFiledAnnotations() || e.isHasMissingField()) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(e.getPath());
+                        e.getMissingFields().forEach(m -> {
+//                            System.out.println(e.getPath() + " " + m.getType() + " " + m.getName());
+                        });
+                        e.getFields().forEach( f -> {
+                            f.getMissingAnnotations().forEach( m -> {
+//                                System.out.println(e.getPath() + " " + f.getType() + " " + f.getName() + " " + m);
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    public void yieldAnnotationsWithoutEntity(){
+//        System.out.println("Data validation present");
+        int counter = 0;
+        EntityCache.entityClusterList.forEach(n -> {
+            n.getMsEntities().forEach(e -> {
+
+                if (e.getDocument() == null) {
+                    e.getFields().forEach(f -> {
+                        if (f.getAnnotations() != null && !f.getAnnotations().isEmpty()) {
+                            e.setHasValidationAnnotations(true);
+                        }
+                    });
+                    if (e.isHasValidationAnnotations()) {
+//                        System.out.println(e.getPath() + " " + e.getDocument() + " " + e.getData());
+                    }
+                }
+            });
+        });
+        for (EntityCluster ec: EntityCache.entityClusterList) {
+            for (MsEntityClass mec: ec.getMsEntities()) {
+                for (MsEntityField mef: mec.getFields()) {
+                    counter += 1;
+                }
+            }
+        }
+//        System.out.println(counter);
+//        System.out.println("-----------");
     }
 
     public void clusterEntities(){

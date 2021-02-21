@@ -2,6 +2,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClassRoles;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
+import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
 import edu.baylor.ecs.cloudhubs.semantics.util.visitor.MsVisitor;
 
 import java.io.File;
@@ -22,22 +23,27 @@ public class ProcessFiles {
     }
 
     public static void processFile(File projectDir) {
+
         new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
 //            System.out.println(path);
 //            System.out.println(Strings.repeat("=", path.length()));
-
+            StatManager.classes += 1;
             MsClassRoles role = null;
             if (path.contains("Controller") && (!path.contains("Test"))){
                 role = MsClassRoles.CONTROLLER;
+                StatManager.controllers += 1;
             }
             if (path.contains("Service") && (!path.contains("Test"))) {
                 role = MsClassRoles.SERVICE;
+                StatManager.services += 1;
             }
             if (path.contains("Repository") && (!path.contains("Test"))) {
                 role = MsClassRoles.REPOSITORY;
+                StatManager.repositories += 1;
             }
             if (path.contains("entity") && (!path.contains("Test"))) {
                 role = MsClassRoles.ENTITY;
+                StatManager.entities += 1;
             }
 
             MsId msId = new MsId(path);
@@ -112,6 +118,6 @@ public class ProcessFiles {
         MsCache.modules = Arrays.asList(directories);
         File projectDir = new File(path);
         processFile(projectDir);
-        System.out.println();
+//        System.out.println();
     }
 }

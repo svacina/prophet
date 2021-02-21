@@ -7,6 +7,7 @@ import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.ModuleClonePairFactory;
 import edu.baylor.ecs.cloudhubs.semantics.util.file.CacheManager;
 import edu.baylor.ecs.cloudhubs.semantics.util.file.PathManager;
+import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
 
 public class MainDriver {
 
@@ -25,9 +26,26 @@ public class MainDriver {
         // print code clones
         printCodeClones();
         // inconsistencies
-        // processInconsistencies();
+         processInconsistencies();
         // cache
         // persistCache();
+    }
+
+    private void processFlags(String... args){
+        // statistics
+        if (args[2].equals("-s")){
+            printStats();
+        }
+        // stress tests
+        if (args[2].equals("-t")) {
+            // read all subdirectories in /home/jan/Development/stress-tests
+
+
+        }
+    }
+
+    private void printStats() {
+        StatManager.printToString();
     }
 
     public void printCodeClones(){
@@ -41,7 +59,7 @@ public class MainDriver {
             sb.append(msCodeClone.getB().getMsController().getClassName());
             sb.append(".");
             sb.append(msCodeClone.getB().getMsControllerMethod().getMethodName());
-            System.out.println(sb.toString());
+//            System.out.println(sb.toString());
         }
     }
 
