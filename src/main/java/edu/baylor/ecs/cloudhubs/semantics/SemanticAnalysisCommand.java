@@ -60,6 +60,7 @@ public class SemanticAnalysisCommand implements QuarkusApplication {
             }
             String[] split = path.split("/");
             System.out.println(split[split.length-1] + "," + sumTime/10);
+            times = new ArrayList<>();
         }
 
 
