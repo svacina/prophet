@@ -15,7 +15,6 @@ public class MsEntityClass {
     private String document;
     private String collectionName;
     private List<MsEntityField> fields;
-    private EntityDefect defect;
     private List<UniqueEntityField> missingFields;
     private boolean hasMissingFiledAnnotations;
     private boolean hasMissingField;

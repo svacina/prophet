@@ -1,8 +1,7 @@
-package edu.baylor.ecs.cloudhubs.semantics.util.factory;
+package edu.baylor.ecs.cloudhubs.semantics.util.builder;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,59 +59,59 @@ public class FlowBuilder {
                 }
             }
         }
-        MsCache.msFlows = msFlowEntities;
+        MsCacheService.msFlows = msFlowEntities;
     }
 
     private Optional<MsMethod> findRepositoryMethod(MsClass msRepository, MsMethodCall msRepositoryMethodCall) {
-        return MsCache.msMethodList.stream()
+        return MsCacheService.msMethodList.stream()
                 .filter(n -> n.getMsId().getPath().equals(msRepository.getMsId().getPath()) && n.getMethodName().equals(msRepositoryMethodCall.getCalledMethodName()))
                 .findFirst();
     }
 
     private Optional<MsClass> findRepositoryClass(MsField msServiceRepositoryField) {
-        return MsCache.msClassList.stream()
+        return MsCacheService.msClassList.stream()
                 .filter(n -> n.getClassName().equals(msServiceRepositoryField.getFieldClass()))
                 .findFirst();
     }
 
     private Optional<MsField> findRepositoryField(MsClass msService, MsMethodCall repositoryMethodCall) {
-        return MsCache.msFieldList.stream()
+        return MsCacheService.msFieldList.stream()
                 .filter(n -> n.getMsId().getPath().equals(msService.getMsId().getPath()) && n.getFieldVariable().equals(repositoryMethodCall.getCalledServiceId()))
                 .findFirst();
     }
 
     private Optional<MsMethodCall> findMsRepositoryMethodCall(MsClass msService, MsMethod msServiceMethod) {
-        return MsCache.msMethodCallList.stream()
+        return MsCacheService.msMethodCallList.stream()
                 .filter(n -> n.getMsId().getPath().equals(msService.getMsId().getPath()) && n.getParentMethodName().equals(msServiceMethod.getMethodName()))
                 .findFirst();
     }
 
     private Optional<MsMethod> findMsServiceMethod(MsClass msService, MsMethodCall controllerServiceMethodCall) {
-        return MsCache.msMethodList.stream()
+        return MsCacheService.msMethodList.stream()
                 .filter(n -> n.getMsId().getPath().equals(msService.getMsId().getPath()) && n.getMethodName().equals(controllerServiceMethodCall.getCalledMethodName()))
                 .findFirst();
     }
 
     private List<MsRestCall> findRestCalls(MsMethod msMethodService) {
-        return MsCache.msRestCallList.stream()
+        return MsCacheService.msRestCallList.stream()
                 .filter(n -> n.getParentClassName().equals(msMethodService.getClassName()) && n.getParentMethodName().equals(msMethodService.getMethodName()))
                 .collect(Collectors.toList());
     }
 
     private Optional<MsClass> findService(MsField msControllerServiceField) {
-        return MsCache.msClassList.stream()
+        return MsCacheService.msClassList.stream()
                 .filter(n -> n.getClassName().equals(msControllerServiceField.getFieldClass() + "Impl"))
                 .findFirst();
     }
 
     private Optional<MsField> findServiceField(MsMethodCall msMethodCall) {
-        return MsCache.msFieldList.stream()
+        return MsCacheService.msFieldList.stream()
                 .filter(n -> n.getMsId().getPath().equals(msMethodCall.getMsId().getPath()) && n.getFieldVariable().equals(msMethodCall.getCalledServiceId()))
                 .findFirst();
     }
 
     public List<MsFlowEntity> findControllerMethods()  {
-        return MsCache.msMethodList
+        return MsCacheService.msMethodList
                 .stream()
                 .filter(n -> n.getMsId().getPath().toLowerCase().contains(MsClassRoles.CONTROLLER.toString().toLowerCase()))
                 .map(MsFlowEntity::new)
@@ -120,7 +119,7 @@ public class FlowBuilder {
     }
 
     public MsClass findController(MsFlowEntity msFlowEntity) {
-        return MsCache.msClassList
+        return MsCacheService.msClassList
                 .stream()
                 .filter(n -> n.getMsId().getPath().equals(msFlowEntity.getMsControllerMethod().getMsId().getPath()))
                 .findFirst()
@@ -128,7 +127,7 @@ public class FlowBuilder {
     }
 
     private Optional<MsMethodCall> findServiceCall(MsMethod msControllerMethod) {
-        return MsCache.msMethodCallList
+        return MsCacheService.msMethodCallList
                 .stream()
                 .filter(n -> n.getParentMethodName().equals(msControllerMethod.getMethodName()) && n.getMsId().getPath().equals(msControllerMethod.getMsId().getPath()))
                 .findFirst();

@@ -2,7 +2,7 @@ package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,10 +10,10 @@ public class CodeClonesFactory {
 
     public void findCodeClones() {
         int counter = 0;
-        for (int i = 0; i < MsCache.modules.size() -1; i++) {
-            for (int j = i + 1; j < MsCache.modules.size(); j++) {
-                String iModule = MsCache.modules.get(i);
-                String jModule = MsCache.modules.get(j);
+        for (int i = 0; i < MsCacheService.modules.size() -1; i++) {
+            for (int j = i + 1; j < MsCacheService.modules.size(); j++) {
+                String iModule = MsCacheService.modules.get(i);
+                String jModule = MsCacheService.modules.get(j);
                 // get flows from i
                 List<MsFlowEntity> iFlows = getFlowEntities(iModule);
                 // get flows from j
@@ -55,32 +55,32 @@ public class CodeClonesFactory {
     private void classifyCodeClones(MsCodeClone msCodeClone) {
 
         if (msCodeClone.getGlobalSimilarity() > 0.0) {
-            MsCache.addHighSimilar(msCodeClone);
+            MsCacheService.addHighSimilar(msCodeClone);
         }
         if (msCodeClone.getSimilarityController() == 1.0) {
-            MsCache.addSameController(msCodeClone);
+            MsCacheService.addSameController(msCodeClone);
         }
         if (msCodeClone.getSimilarityRepository() > 0.0) {
-            MsCache.addSameRepository(msCodeClone);
+            MsCacheService.addSameRepository(msCodeClone);
         }
         if (msCodeClone.getSimilarityRestCalls() >= 3.0) {
-            MsCache.addSameRestCall(msCodeClone);
+            MsCacheService.addSameRestCall(msCodeClone);
         }
         if (msCodeClone.getGlobalSimilarity() < 0.8 && msCodeClone.getGlobalSimilarity() >= 0.6) {
-            MsCache.typeC.add(msCodeClone);
+            MsCacheService.typeC.add(msCodeClone);
         }
         if (msCodeClone.getGlobalSimilarity() < 0.9 && msCodeClone.getGlobalSimilarity() >= 0.8) {
             msCodeClone.setTypeB(true);
-            MsCache.typeB.add(msCodeClone);
+            MsCacheService.typeB.add(msCodeClone);
         }
         if (msCodeClone.getGlobalSimilarity() <= 1.0 && msCodeClone.getGlobalSimilarity() >= 0.9) {
             msCodeClone.setTypeA(true);
-            MsCache.typeA.add(msCodeClone);
+            MsCacheService.typeA.add(msCodeClone);
         }
         if (msCodeClone.isTypeA()) {
 //            System.out.println();
         }
-        MsCache.addCodeClone(msCodeClone);
+        MsCacheService.addCodeClone(msCodeClone);
     }
 
     private double calculateGlobalSimilarity(MsCodeClone msCodeClone) {
@@ -150,7 +150,7 @@ public class CodeClonesFactory {
     }
 
     public List<MsFlowEntity> getFlowEntities(String module) {
-        return MsCache.msFlows
+        return MsCacheService.msFlows
                 .stream()
                 .filter(n -> n.getMsController().getMsId().getPath().contains(module)).collect(Collectors.toList());
     }

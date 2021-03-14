@@ -1,10 +1,10 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.*;
 
 import java.util.*;
 
-public class EntityClusterManager {
+public class EntityClusterFactory {
 
     public void generateDefects(){
         clusterEntities();

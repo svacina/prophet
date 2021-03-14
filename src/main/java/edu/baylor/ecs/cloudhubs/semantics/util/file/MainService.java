@@ -1,26 +1,42 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.file;
 
+import edu.baylor.ecs.cloudhubs.semantics.dto.AnalyzedCache;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
 import edu.baylor.ecs.cloudhubs.semantics.entity.defects.EntityCache;
+import edu.baylor.ecs.cloudhubs.semantics.dto.AnalyzeSutArgs;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.CodeClonesFactory;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.FlowBuilder;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.ModuleClonePairFactory;
-import edu.baylor.ecs.cloudhubs.semantics.util.file.CacheManager;
-import edu.baylor.ecs.cloudhubs.semantics.util.file.PathManager;
-import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
+import edu.baylor.ecs.cloudhubs.semantics.util.builder.FlowBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.factory.EntityClusterFactory;
 
-public class MainDriver {
+public class MainService {
+
+    public AnalyzedCache analyze(AnalyzeSutArgs analyzeSutArgs) {
+        MsCacheService.init();
+        EntityCache.init();
+        PathService.sutPath = analyzeSutArgs.getSutRoot();
+        PathService.cachePath = analyzeSutArgs.getDataOutputPath();
+        ProcessService.run(PathService.sutPath);
+        processCodeClones();
+        processInconsistencies();
+        if (analyzeSutArgs.isLogResults()) {
+            persistCache();
+        }
+        if (analyzeSutArgs.isLogStats()) {
+            printStats();
+        }
+        return new AnalyzedCache(MsCacheService.typeA, MsCacheService.typeB, EntityCache.entityClusterList);
+    }
 
     public void process(String... args){
         // cache
-        MsCache.init();
+        MsCacheService.init();
         EntityCache.init();
         // paths
         String[] split = args[0].split(",");
-        PathManager.sutPath = split[0];
-        PathManager.cachePath = split[1];
+        PathService.sutPath = split[0];
+        PathService.cachePath = split[1];
         // basic files
-        ProcessFiles.run(PathManager.sutPath);
+        ProcessService.run(PathService.sutPath);
         // code clones
         processCodeClones();
         // print code clones
@@ -31,25 +47,14 @@ public class MainDriver {
         // persistCache();
     }
 
-    private void processFlags(String... args){
-        // statistics
-        if (args[2].equals("-s")){
-            printStats();
-        }
-        // stress tests
-        if (args[2].equals("-t")) {
-            // read all subdirectories in /home/jan/Development/stress-tests
-
-
-        }
-    }
-
     private void printStats() {
-        StatManager.printToString();
+        String stats = StatService.printToString();
+        CacheService cacheService = new CacheService();
+        cacheService.persistStats(PathService.cachePath, stats);
     }
 
     public void printCodeClones(){
-        for (MsCodeClone msCodeClone :MsCache.typeB
+        for (MsCodeClone msCodeClone : MsCacheService.typeB
              ) {
             StringBuilder sb = new StringBuilder();
             sb.append(msCodeClone.getA().getMsController().getClassName());
@@ -78,13 +83,13 @@ public class MainDriver {
 
 
     public void processInconsistencies() {
-        EntityClusterManager ecm = new EntityClusterManager();
+        EntityClusterFactory ecm = new EntityClusterFactory();
         ecm.generateDefects();
     }
 
     private void persistCache() {
-        CacheManager cacheManager = new CacheManager();
-        cacheManager.persistCache(PathManager.cachePath);
-        cacheManager.persistInconsistencies(PathManager.cachePath);
+        CacheService cacheService = new CacheService();
+        cacheService.persistCache(PathService.cachePath);
+        cacheService.persistInconsistencies(PathService.cachePath);
     }
 }

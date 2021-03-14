@@ -1,8 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
-import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +25,10 @@ public class FlowsFactory {
 
     public static void createFlows(){
 
-        for (String module: MsCache.modules
+        for (String module: MsCacheService.modules
              ) {
             // 1. get controllers associated with the module
-            List<MsClass> controllers = MsCache.msClassList
+            List<MsClass> controllers = MsCacheService.msClassList
                     .stream()
                     .filter(n -> n.getRole().equals(MsClassRoles.CONTROLLER) && n.getMsId().getDirectoryName().contains(module))
                     .collect(Collectors.toList());
@@ -42,7 +41,7 @@ public class FlowsFactory {
                 msFlow.setModule(module);
                 msFlow.setController(controller);
                 // 2a. per each controller find method calls
-                List<MsMethod> controllerMethods = MsCache.msMethodList
+                List<MsMethod> controllerMethods = MsCacheService.msMethodList
                         .stream()
                         .filter(n -> n.getMsId().getDirectoryName().equals(controller.getMsId().getDirectoryName()))
                         .collect(Collectors.toList());
@@ -50,12 +49,12 @@ public class FlowsFactory {
                     // 2.b set controller method
                     msFlow.setControllerMethod(cm);
                     // 3. per each controller method find service method call(s)
-                    List<MsMethodCall> controllerServiceCalls = MsCache.msMethodCallList
+                    List<MsMethodCall> controllerServiceCalls = MsCacheService.msMethodCallList
                             .stream()
                             .filter(n -> (n.getMsId().getPath()+n.getParentMethodName()).equals(cm.getMsId().getPath()+cm.getMethodName()))
                             .collect(Collectors.toList());
                     // 4. per each method call find ms field
-                    List<MsField> controllerServiceFields = MsCache.msFieldList
+                    List<MsField> controllerServiceFields = MsCacheService.msFieldList
                             .stream()
                             .filter(n -> n.getMsId().getPath().equals(cm.getMsId().getPath()))
                             .collect(Collectors.toList());

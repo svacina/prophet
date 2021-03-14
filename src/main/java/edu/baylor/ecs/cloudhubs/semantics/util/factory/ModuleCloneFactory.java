@@ -2,12 +2,10 @@ package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.SemanticAnalysisCommand;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlowEntity;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
-import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsMethod;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsFlowEntity;
 import edu.baylor.ecs.cloudhubs.semantics.entity.quantification.ModuleClone;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
-import org.checkerframework.checker.units.qual.A;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.PathService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,7 +27,7 @@ public class ModuleCloneFactory {
     public void createData(){
         List<ModuleClone> moduleClones = getModuleClones();
         List<String[]> dataLines = convertModuleClones(moduleClones);
-        File csvOutputFile = new File(SemanticAnalysisCommand.cachePath + "/per-module-clones.csv");
+        File csvOutputFile = new File(PathService.cachePath + "/per-module-clones.csv");
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             dataLines.stream()
                     .map(this::convertToCSV)
@@ -85,8 +83,8 @@ public class ModuleCloneFactory {
             codeCloneIds.add(controllerA + "." + methodA);
             codeCloneIds.add(controllerB + "." + methodB);
         }
-        for (int i = 0; i < MsCache.modules.size(); i++) {
-            String module = MsCache.modules.get(i);
+        for (int i = 0; i < MsCacheService.modules.size(); i++) {
+            String module = MsCacheService.modules.get(i);
             ModuleClone moduleClone = new ModuleClone();
             moduleClone.setModuleId(i+1);
             moduleClone.setModuleName(module);
@@ -108,13 +106,13 @@ public class ModuleCloneFactory {
     }
 
     private List<MsFlowEntity> getModuleFlowEntity(String module){
-        return MsCache.msFlows.stream()
+        return MsCacheService.msFlows.stream()
                 .filter(n -> n.getMsController().getMsId().getPath().contains(module))
                 .collect(Collectors.toList());
     }
 
     private List<MsCodeClone> getCodeClonesTypeAB() {
-        return MsCache.msCodeClones.stream()
+        return MsCacheService.msCodeClones.stream()
                 .filter(n -> n.isTypeA() || n.isTypeB())
                 .collect(Collectors.toList());
     }

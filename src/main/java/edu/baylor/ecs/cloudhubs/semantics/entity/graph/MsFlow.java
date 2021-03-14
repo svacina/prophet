@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.entity;
+package edu.baylor.ecs.cloudhubs.semantics.entity.graph;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsField;

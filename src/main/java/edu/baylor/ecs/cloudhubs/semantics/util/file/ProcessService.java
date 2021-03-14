@@ -1,20 +1,19 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.file;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClassRoles;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
-import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
 import edu.baylor.ecs.cloudhubs.semantics.util.visitor.MsVisitor;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Arrays;
 
-public class ProcessFiles {
+public class ProcessService {
 
     public static boolean isJava = false;
 
     public static boolean detectJavaFiles(File projectDir) {
-        new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
+        new DirService((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
             isJava = true;
         }).explore(projectDir);
         boolean toReturn = isJava;
@@ -24,30 +23,29 @@ public class ProcessFiles {
 
     public static void processFile(File projectDir) {
 
-        new DirExplorer((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
+        new DirService((level, path, file) -> path.endsWith(".java"), (level, path, file) -> {
 //            System.out.println(path);
 //            System.out.println(Strings.repeat("=", path.length()));
-            StatManager.classes += 1;
+            StatService.classes += 1;
             MsClassRoles role = null;
             if (path.contains("Controller") && (!path.contains("Test"))){
                 role = MsClassRoles.CONTROLLER;
-                StatManager.controllers += 1;
+                StatService.controllers += 1;
             }
             if (path.contains("Service") && (!path.contains("Test"))) {
                 role = MsClassRoles.SERVICE;
-                StatManager.services += 1;
+                StatService.services += 1;
             }
             if (path.contains("Repository") && (!path.contains("Test"))) {
                 role = MsClassRoles.REPOSITORY;
-                StatManager.repositories += 1;
+                StatService.repositories += 1;
             }
             if (path.contains("entity") && (!path.contains("Test"))) {
                 role = MsClassRoles.ENTITY;
-                StatManager.entities += 1;
+                StatService.entities += 1;
             }
 
             MsId msId = new MsId(path);
-            MsVisitor.visitMissingAnnotation(file, path, role,msId);
             if (role != null) {
                 if (role.equals(MsClassRoles.CONTROLLER) || role.equals(MsClassRoles.SERVICE)) {
                     // CLASS
@@ -115,7 +113,7 @@ public class ProcessFiles {
                 return isDirectory && isModule;
             }
         });
-        MsCache.modules = Arrays.asList(directories);
+        MsCacheService.modules = Arrays.asList(directories);
         File projectDir = new File(path);
         processFile(projectDir);
 //        System.out.println();

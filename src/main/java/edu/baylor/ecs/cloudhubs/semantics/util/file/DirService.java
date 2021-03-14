@@ -1,8 +1,8 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.file;
 
 import java.io.File;
 
-public class DirExplorer {
+public class DirService {
     public interface FileHandler {
         void handle(int level, String path, File file);
     }
@@ -14,7 +14,7 @@ public class DirExplorer {
     private FileHandler fileHandler;
     private Filter filter;
 
-    public DirExplorer(Filter filter, FileHandler fileHandler) {
+    public DirService(Filter filter, FileHandler fileHandler) {
         this.filter = filter;
         this.fileHandler = fileHandler;
     }

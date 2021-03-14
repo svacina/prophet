@@ -4,8 +4,7 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.VariableDeclarator;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsField;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFieldBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 
 /**
  * Creates MsField for CodeClones
@@ -30,7 +29,7 @@ public class MsFieldVisitor {
                     msField.setParentMethod(MsParentVisitor.getMsParentMethod(n));
                     msField.setLine(n.getBegin().get().line);
                     msField.setMsId(msId);
-                    MsCache.addMsField(msField);
+                    MsCacheService.addMsField(msField);
                 }
             }
         }

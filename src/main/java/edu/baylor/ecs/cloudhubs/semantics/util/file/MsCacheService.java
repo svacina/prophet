@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.util;
+package edu.baylor.ecs.cloudhubs.semantics.util.file;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.*;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
@@ -7,7 +7,7 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.inconsistencies.MsInconsistenci
 import java.util.ArrayList;
 import java.util.List;
 
-public class MsCache {
+public class MsCacheService {
     public static List<MsClass> msClassList;
     public static List<MsMethod> msMethodList;
     public static List<MsMethodCall> msMethodCallList;

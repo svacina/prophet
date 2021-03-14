@@ -1,8 +1,7 @@
 package edu.baylor.ecs.cloudhubs.semantics.entity.quantification;
 
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlow;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlowEntity;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsFlowEntity;
 import lombok.Data;
 
 import java.util.List;

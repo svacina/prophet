@@ -11,8 +11,7 @@ import com.github.javaparser.ast.expr.AnnotationExpr;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClass;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClassRoles;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityClassBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 
 import java.util.Optional;
 
@@ -68,6 +67,6 @@ public class MsClassVisitor {
 
         msClass.setIds();
         msClass.setMsId(msId);
-        MsCache.addMsClass(msClass);
+        MsCacheService.addMsClass(msClass);
     }
 }

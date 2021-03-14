@@ -1,6 +1,6 @@
-package edu.baylor.ecs.cloudhubs.semantics.util.stats;
+package edu.baylor.ecs.cloudhubs.semantics.util.file;
 
-public class StatManager {
+public class StatService {
 
     public static int classes = 0;
     public static int controllers = 0;
@@ -11,7 +11,7 @@ public class StatManager {
     public static int methodCalls = 0;
     public static int fields = 0;
 
-    public static void printToString(){
+    public static String printToString(){
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append(classes);
@@ -30,7 +30,7 @@ public class StatManager {
         sb.append("\n");
         sb.append(fields);
         sb.append("\n");
-//        System.out.println(sb.toString());
+        return sb.toString();
     }
 
 }

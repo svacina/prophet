@@ -1,4 +1,4 @@
-package edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder;
+package edu.baylor.ecs.cloudhubs.semantics.util.builder;
 
 import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;

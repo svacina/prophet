@@ -2,10 +2,10 @@ package edu.baylor.ecs.cloudhubs.semantics.util.factory;
 
 import edu.baylor.ecs.cloudhubs.semantics.SemanticAnalysisCommand;
 import edu.baylor.ecs.cloudhubs.semantics.entity.MsCodeClone;
-import edu.baylor.ecs.cloudhubs.semantics.entity.MsFlowEntity;
+import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsFlowEntity;
 import edu.baylor.ecs.cloudhubs.semantics.entity.quantification.ModuleClonePair;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
-import org.checkerframework.checker.units.qual.A;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.PathService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ModuleClonePairFactory {
 
@@ -25,7 +24,7 @@ public class ModuleClonePairFactory {
 
     public void printModuleClonePairs(){
         List<ModuleClonePair> moduleClonePairs = createModuleClonePairs();
-        File csvOutputFile = new File(SemanticAnalysisCommand.cachePath +"/module-pair-clones.txt");
+        File csvOutputFile = new File(PathService.cachePath +"/module-pair-clones.txt");
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             moduleClonePairs.stream()
                     .map(this::convertToString)
@@ -46,10 +45,10 @@ public class ModuleClonePairFactory {
      */
     public List<ModuleClonePair> createModuleClonePairs() {
         List<ModuleClonePair> moduleClonePairs = new ArrayList<>();
-        for (int i = 0; i < MsCache.modules.size(); i++) {
-            for (int j = 0; j < MsCache.modules.size(); j++) {
-                String iModule = MsCache.modules.get(i);
-                String jModule = MsCache.modules.get(j);
+        for (int i = 0; i < MsCacheService.modules.size(); i++) {
+            for (int j = 0; j < MsCacheService.modules.size(); j++) {
+                String iModule = MsCacheService.modules.get(i);
+                String jModule = MsCacheService.modules.get(j);
                 if (!iModule.equals(jModule)) {
                     ModuleClonePair moduleClonePair = new ModuleClonePair();
                     moduleClonePair.setModuleA(iModule);
@@ -74,7 +73,7 @@ public class ModuleClonePairFactory {
      * Find code clones such that A has moduleA and B has moduleB
      */
     private List<MsCodeClone> getAssociatedCodeClones(String moduleA, String moduleB){
-        return MsCache.msCodeClones.stream()
+        return MsCacheService.msCodeClones.stream()
                 .filter(n ->
                         (n.getA().getMsController().getMsId().getPath().contains(moduleA) && n.getB().getMsController().getMsId().getPath().contains(moduleB) && (n.isTypeA() || n.isTypeB())) ||
                         (n.getA().getMsController().getMsId().getPath().contains(moduleB) && n.getB().getMsController().getMsId().getPath().contains(moduleA) && (n.isTypeA() || n.isTypeB()))
@@ -133,12 +132,12 @@ public class ModuleClonePairFactory {
 
     public void addIds() {
         int counter = 1;
-        for (MsCodeClone m: MsCache.typeA
+        for (MsCodeClone m: MsCacheService.typeA
              ) {
             m.setId(counter);
             counter += 1;
         }
-        for (MsCodeClone m: MsCache.typeB) {
+        for (MsCodeClone m: MsCacheService.typeB) {
             m.setId(counter);
             counter += 1;
         }

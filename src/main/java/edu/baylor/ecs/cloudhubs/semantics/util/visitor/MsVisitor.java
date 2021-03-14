@@ -1,21 +1,18 @@
 package edu.baylor.ecs.cloudhubs.semantics.util.visitor;
 
 import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.*;
-import edu.baylor.ecs.cloudhubs.semantics.util.MissingAnnotationDetector;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 import edu.baylor.ecs.cloudhubs.semantics.util.constructs.MsMethodBuilder;
 import edu.baylor.ecs.cloudhubs.semantics.util.factory.MsRestCallFactory;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.RestAnnotationDetector;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityClassBuilder;
-import edu.baylor.ecs.cloudhubs.semantics.util.factory.defects.builder.EntityFieldBuilder;
-import edu.baylor.ecs.cloudhubs.semantics.util.stats.StatManager;
+import edu.baylor.ecs.cloudhubs.semantics.util.builder.EntityClassBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.builder.EntityFieldBuilder;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.StatService;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,20 +25,6 @@ import java.util.Optional;
  * MsVisitor -> visitFields
  */
 public class MsVisitor {
-
-    public static void visitMissingAnnotation(File file, String path, MsClassRoles role, MsId msId) {
-        try {
-            new VoidVisitorAdapter<Object>() {
-                @Override
-                public void visit(ClassOrInterfaceDeclaration n, Object arg) {
-                    super.visit(n, arg);
-                    MissingAnnotationDetector.findMissingAnnotation(n, msId, role);
-                }
-            }.visit(StaticJavaParser.parse(file), null);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public static void visitClass(File file, String path, MsClassRoles role, MsId msId) {
         try {
@@ -80,8 +63,7 @@ public class MsVisitor {
                 public void visit(MethodDeclaration n, Object arg) {
                     super.visit(n, arg);
                     MsMethodBuilder.buildMsMethod(n, role, path, msId);
-                    RestAnnotationDetector.missingRestAnnotation(n, msId);
-                    StatManager.methods += 1;
+                    StatService.methods += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {
@@ -95,7 +77,7 @@ public class MsVisitor {
                 @Override
                 public void visit(MethodCallExpr n, Object arg) {
                     super.visit(n, arg);
-                    StatManager.methodCalls += 1;
+                    StatService.methodCalls += 1;
                     Optional<Expression> scope = n.getScope();
                     if (scope.isPresent()) {
                         if (scope.get() instanceof  NameExpr) {
@@ -116,7 +98,7 @@ public class MsVisitor {
                                 msMethodCall.setParentClassId();
                                 msMethodCall.setMsId(msId);
                                 // register method call to cache
-                                MsCache.addMsMethodCall(msMethodCall);
+                                MsCacheService.addMsMethodCall(msMethodCall);
                             }
                             if (name.toLowerCase().contains("service")) {
                                 // service is being called
@@ -131,7 +113,7 @@ public class MsVisitor {
                                 msMethodCall.setParentClassId();
                                 msMethodCall.setMsId(msId);
                                 // register method call to cache
-                                MsCache.addMsMethodCall(msMethodCall);
+                                MsCacheService.addMsMethodCall(msMethodCall);
                             } else if (name.equals("restTemplate")) {
                                 // rest template is being called
                                 MsRestCall msRestCall = MsRestCallFactory.getMsRestCall(n);
@@ -140,7 +122,7 @@ public class MsVisitor {
                                 msRestCall.setMsParentMethod(MsParentVisitor.getMsParentMethod(n));
                                 msRestCall.setParentClassId();
                                 msRestCall.setMsId(msId);
-                                MsCache.addMsRestMethodCall(msRestCall);
+                                MsCacheService.addMsRestMethodCall(msRestCall);
                             }
                         }
                     }
@@ -160,7 +142,7 @@ public class MsVisitor {
                 public void visit(FieldDeclaration n, Object arg) {
                     super.visit(n, arg);
                     MsFieldVisitor.visitFieldDeclaration(n, path, msId);
-                    StatManager.fields += 1;
+                    StatService.fields += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {
@@ -176,7 +158,7 @@ public class MsVisitor {
                     super.visit(n, arg);
                     EntityFieldBuilder builder = new EntityFieldBuilder();
                     builder.find(n, msId);
-                    StatManager.fields += 1;
+                    StatService.fields += 1;
                 }
             }.visit(StaticJavaParser.parse(file), null);
         } catch (IOException e) {

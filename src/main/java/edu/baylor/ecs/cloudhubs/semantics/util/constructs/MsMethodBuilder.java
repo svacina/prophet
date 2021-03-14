@@ -8,7 +8,7 @@ import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsArgument;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsClassRoles;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsId;
 import edu.baylor.ecs.cloudhubs.semantics.entity.graph.MsMethod;
-import edu.baylor.ecs.cloudhubs.semantics.util.MsCache;
+import edu.baylor.ecs.cloudhubs.semantics.util.file.MsCacheService;
 
 import java.util.Optional;
 
@@ -51,6 +51,6 @@ public class MsMethodBuilder {
         }
         msMethod.setIds();
         msMethod.setMsId(msId);
-        MsCache.addMsMethod(msMethod);
+        MsCacheService.addMsMethod(msMethod);
     }
 }
