@@ -33,6 +33,7 @@ public class AnalysisResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/analyze")
     public AnalyzedCache analyze(AnalyzeSutArgs analyzeSutArgs) {
+//        return null;
         return AnalysisService.analyze(analyzeSutArgs);
     }
 

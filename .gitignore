@@ -34,7 +34,8 @@ nb-configuration.xml
 *.orig
 *.rej
 
-webapp
+node_modules
+build
 
 venv
 case-study

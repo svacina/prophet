@@ -1,0 +1,267 @@
+[
+  {
+    "a": {
+      "msController": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/controller/PreserveController.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "classId": "preserve.controller.PreserveController",
+        "packageName": "preserve.controller",
+        "className": "PreserveController",
+        "role": "CONTROLLER"
+      },
+      "msControllerMethod": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/controller/PreserveController.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "returnType": "HttpEntity",
+        "methodName": "preserve",
+        "className": "PreserveController",
+        "packageName": "preserve.controller",
+        "methodId": "preserve.controller.PreserveController.preserve",
+        "classId": "preserve.controller.PreserveController",
+        "line": 31,
+        "msArgumentList": [
+          {
+            "returnType": "OrderTicketsInfo"
+          },
+          {
+            "returnType": "HttpHeaders"
+          }
+        ],
+        "msAnnotations": [
+          {
+            "isHttpAnnotation": true,
+            "annotationName": "CrossOrigin",
+            "key": "origins",
+            "value": "\"*\""
+          },
+          {
+            "isHttpAnnotation": true,
+            "annotationName": "PostMapping",
+            "key": "value",
+            "value": "\"/preserve\""
+          }
+        ]
+      },
+      "msServiceMethodCall": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/controller/PreserveController.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "parentPackageName": "preserve.controller",
+        "parentClassName": "PreserveController",
+        "parentMethodName": "preserve",
+        "parentClassId": "preserve.controller.PreserveController",
+        "lineNumber": 36,
+        "calledMethodName": "preserve",
+        "calledServiceId": "preserveService",
+        "statementDeclaration": "preserveService.preserve(oti, headers)"
+      },
+      "msControllerServiceField": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/controller/PreserveController.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "fieldClass": "PreserveService",
+        "fieldVariable": "preserveService",
+        "parentMethod": {
+          "parentClassName": "PreserveController",
+          "parentPackageName": "preserve.controller"
+        },
+        "line": 21
+      },
+      "msService": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/service/PreserveServiceImpl.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "classId": "preserve.service.PreserveServiceImpl",
+        "packageName": "preserve.service",
+        "className": "PreserveServiceImpl",
+        "role": "SERVICE"
+      },
+      "msServiceMethod": {
+        "msId": {
+          "path": "/ts-preserve-service/src/main/java/preserve/service/PreserveServiceImpl.java",
+          "directoryName": "/ts-preserve-service/src/main/java/preserve"
+        },
+        "returnType": "Response",
+        "methodName": "preserve",
+        "className": "PreserveServiceImpl",
+        "packageName": "preserve.service",
+        "methodId": "preserve.service.PreserveServiceImpl.preserve",
+        "classId": "preserve.service.PreserveServiceImpl",
+        "line": 30,
+        "msArgumentList": [
+          {
+            "returnType": "OrderTicketsInfo"
+          },
+          {
+            "returnType": "HttpHeaders"
+          }
+        ],
+        "msAnnotations": [
+          {
+            "isHttpAnnotation": false,
+            "annotationName": "Override"
+          }
+        ]
+      },
+      "msRestCalls": [
+        {
+          "api": "\"http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo\"",
+          "httpMethod": "POST",
+          "returnType": "TravelResult",
+          "msId": {
+            "path": "/ts-preserve-service/src/main/java/preserve/service/PreserveServiceImpl.java",
+            "directoryName": "/ts-preserve-service/src/main/java/preserve"
+          },
+          "parentPackageName": "preserve.service",
+          "parentClassName": "PreserveServiceImpl",
+          "parentMethodName": "preserve",
+          "parentClassId": "preserve.service.PreserveServiceImpl",
+          "lineNumber": 110,
+          "statementDeclaration": "restTemplate.exchange(\"http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo\", HttpMethod.POST, requestEntity, new ParameterizedTypeReference\u003cResponse\u003cTravelResult\u003e\u003e() {\n})"
+        }
+      ]
+    },
+    "b": {
+      "msController": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/controller/PreserveOtherController.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "classId": "preserveOther.controller.PreserveOtherController",
+        "packageName": "preserveOther.controller",
+        "className": "PreserveOtherController",
+        "role": "CONTROLLER"
+      },
+      "msControllerMethod": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/controller/PreserveOtherController.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "returnType": "HttpEntity",
+        "methodName": "preserve",
+        "className": "PreserveOtherController",
+        "packageName": "preserveOther.controller",
+        "methodId": "preserveOther.controller.PreserveOtherController.preserve",
+        "classId": "preserveOther.controller.PreserveOtherController",
+        "line": 31,
+        "msArgumentList": [
+          {
+            "returnType": "OrderTicketsInfo"
+          },
+          {
+            "returnType": "HttpHeaders"
+          }
+        ],
+        "msAnnotations": [
+          {
+            "isHttpAnnotation": true,
+            "annotationName": "CrossOrigin",
+            "key": "origins",
+            "value": "\"*\""
+          },
+          {
+            "isHttpAnnotation": true,
+            "annotationName": "PostMapping",
+            "key": "value",
+            "value": "\"/preserveOther\""
+          }
+        ]
+      },
+      "msServiceMethodCall": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/controller/PreserveOtherController.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "parentPackageName": "preserveOther.controller",
+        "parentClassName": "PreserveOtherController",
+        "parentMethodName": "preserve",
+        "parentClassId": "preserveOther.controller.PreserveOtherController",
+        "lineNumber": 36,
+        "calledMethodName": "preserve",
+        "calledServiceId": "preserveService",
+        "statementDeclaration": "preserveService.preserve(oti, headers)"
+      },
+      "msControllerServiceField": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/controller/PreserveOtherController.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "fieldClass": "PreserveOtherService",
+        "fieldVariable": "preserveService",
+        "parentMethod": {
+          "parentClassName": "PreserveOtherController",
+          "parentPackageName": "preserveOther.controller"
+        },
+        "line": 21
+      },
+      "msService": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/service/PreserveOtherServiceImpl.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "classId": "preserveOther.service.PreserveOtherServiceImpl",
+        "packageName": "preserveOther.service",
+        "className": "PreserveOtherServiceImpl",
+        "role": "SERVICE"
+      },
+      "msServiceMethod": {
+        "msId": {
+          "path": "/ts-preserve-other-service/src/main/java/preserveOther/service/PreserveOtherServiceImpl.java",
+          "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+        },
+        "returnType": "Response",
+        "methodName": "preserve",
+        "className": "PreserveOtherServiceImpl",
+        "packageName": "preserveOther.service",
+        "methodId": "preserveOther.service.PreserveOtherServiceImpl.preserve",
+        "classId": "preserveOther.service.PreserveOtherServiceImpl",
+        "line": 30,
+        "msArgumentList": [
+          {
+            "returnType": "OrderTicketsInfo"
+          },
+          {
+            "returnType": "HttpHeaders"
+          }
+        ],
+        "msAnnotations": [
+          {
+            "isHttpAnnotation": false,
+            "annotationName": "Override"
+          }
+        ]
+      },
+      "msRestCalls": [
+        {
+          "api": "\"http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo\"",
+          "httpMethod": "POST",
+          "returnType": "TravelResult",
+          "msId": {
+            "path": "/ts-preserve-other-service/src/main/java/preserveOther/service/PreserveOtherServiceImpl.java",
+            "directoryName": "/ts-preserve-other-service/src/main/java/preserveOther"
+          },
+          "parentPackageName": "preserveOther.service",
+          "parentClassName": "PreserveOtherServiceImpl",
+          "parentMethodName": "preserve",
+          "parentClassId": "preserveOther.service.PreserveOtherServiceImpl",
+          "lineNumber": 118,
+          "statementDeclaration": "restTemplate.exchange(\"http://ts-ticketinfo-service:15681/api/v1/ticketinfoservice/ticketinfo\", HttpMethod.POST, requestEntity, new ParameterizedTypeReference\u003cResponse\u003cTravelResult\u003e\u003e() {\n})"
+        }
+      ]
+    },
+    "similarityController": 1.0,
+    "similarityService": 0.5,
+    "similarityRepository": 0.0,
+    "similarityRestCalls": 1.0,
+    "globalSimilarity": 0.925,
+    "typeA": true,
+    "typeB": false
+  }
+]
