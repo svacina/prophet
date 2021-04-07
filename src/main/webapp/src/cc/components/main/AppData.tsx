@@ -55,10 +55,30 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+const isInconsistencyEmpty = (data) => {
+    let flag = true;
+    if (data === null || data === undefined) {
+        return true;
+    }
+    data.forEach(function(entry) {
+        // console.log(entry);
+        entry.msEntities.forEach(function(entry2) {
+
+            if (entry2.hasMissingFiledAnnotations) {
+                flag = false;
+            }
+        });
+    });
+    console.log("Flag: " + flag);
+    return flag;
+}
+
 const AppData = () => {
     const classes = useStyles();
     const [analyzedData, setAnalyzedData] = useGlobalState('analyzedData');
     const [value, setValue] = React.useState(0);
+
+    const isEmpty = isInconsistencyEmpty(analyzedData.inconsistencies);
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
@@ -79,7 +99,9 @@ const AppData = () => {
                                             </Tabs>
                                         </AppBar>
                                         <TabPanel value={value} index={0}>
-                                            <InconsistencyList inconsistencyList={analyzedData.inconsistencies} />
+                                            { !isEmpty && <InconsistencyList inconsistencyList={analyzedData.inconsistencies} /> }
+                                            { isEmpty && <div>{'No inconsistencies found' }</div> }
+
                                         </TabPanel>
                                         <TabPanel value={value} index={1}>
                                             <CodeCloneList cloneList={analyzedData.typeA} />

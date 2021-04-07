@@ -17,13 +17,19 @@ const Entity = ({entity}) => {
                 <Grid item xs={6}>
                     <Paper className={classes.entity_item}>
                         <CloneLink link={entity.path} heading={"h5"}/>
-                        <Box mb={3}>
-                            <FieldTable missingFields={entity.missingFields} />
-                        </Box>
-                        <Box mb={3}>
-                            <AnnotationFieldTable entity={entity} />
-                        </Box>
+                        {entity.missingFields &&
+                            <Box mb={3}>
+                                <FieldTable missingFields={entity.missingFields} />
+                            </Box>
+                        }
 
+                        {/*{ */}
+                        {/*    entity && entity.entity && entity.entity.fields &&*/}
+                            <Box mb={3}>
+                                <AnnotationFieldTable entity={entity} />
+                            </Box>
+
+                        {/*}*/}
                         <CodeAccordion code={entity.code} />
                     </Paper>
 

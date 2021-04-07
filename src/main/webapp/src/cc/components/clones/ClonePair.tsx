@@ -38,14 +38,19 @@ const ClonePair = (props: Props) => {
     const [showResults, setShowResults] = React.useState(true)
     const onClick = (e) => {
         e.preventDefault();
-        setShowResults(false);
+        if (showResults) {
+            setShowResults(false);
+        } else  {
+            setShowResults(true);
+        }
+
     }
     return (
         <div>
-            { showResults ? <Card>
+             <Card>
                 <div className={classes.root}>
                     <Paper className={classes.paper}>
-                        <Accordion>
+                        <Accordion expanded={showResults} onClick={onClick}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content"
@@ -69,7 +74,7 @@ const ClonePair = (props: Props) => {
                                     </Grid>
                                     <Grid item xs={8}>
                                         <Grid container justify="flex-end">
-                                            <Button onClick={e => onClick(e)}>Solve</Button>
+                                            {/*<Button onClick={e => onClick(e)}>Solve</Button>*/}
                                         </Grid>
                                     </Grid>
                                     <Grid item xs={6}>
@@ -92,7 +97,7 @@ const ClonePair = (props: Props) => {
                 </div>
 
 
-            </Card> : null }
+            </Card>
         </div>
     );
 }

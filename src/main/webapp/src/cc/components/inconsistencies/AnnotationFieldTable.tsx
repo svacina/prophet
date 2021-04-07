@@ -21,8 +21,8 @@ const AnnotationFieldTable = (entity) => {
                     <Table aria-label={entity.entity.code}>
                         <TableHead>
                             <TableRow>
-                                <TableCell><Box fontWeight="fontWeightBold">Field</Box></TableCell>
-                                <TableCell align="left"><Box fontWeight="fontWeightBold">Annotation</Box></TableCell>
+                                <TableCell><Box fontWeight="fontWeightBold">Annotation</Box></TableCell>
+                                <TableCell align="left"><Box fontWeight="fontWeightBold">Field</Box></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

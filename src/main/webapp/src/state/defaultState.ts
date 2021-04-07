@@ -1,11 +1,11 @@
 import {State} from "./state";
 
 export const defaultState: State = {
-    "sutPath": "/home/jan/Development/Project/benchmarks/train-ticket",
+    "sutPath": "",
     "sutError" : false,
-    "idePath": "/home/jan/Development/VSCode/bin",
+    "idePath": "",
     "ideError" : false,
-    "ideExe": "./code",
+    "ideExe": "",
     "ideExeError" : false,
     "analyzedData": {},
     "gitError": false,

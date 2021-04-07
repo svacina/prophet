@@ -59,12 +59,6 @@ const CloneSummary = (props: Props) => {
                             </TableCell>
                             <TableCell align="left">{props.similarityRestCalls * 100} %</TableCell>
                         </TableRow>
-                        <TableRow key={4}>
-                            <TableCell component="th" scope="row">
-                                {"Rest Calls"}
-                            </TableCell>
-                            <TableCell align="left">{props.similarityRestCalls * 100} %</TableCell>
-                        </TableRow>
                         <TableRow key={5}>
                             <TableCell component="th" scope="row">
                                 <Box fontWeight="fontWeightBold" m={0}>

@@ -27,9 +27,6 @@ const CloneDetail = ({clone}) => {
     const classes = useStyles();
     return (
         <div>
-            {/*<Typography variant="h6" gutterBottom className={classes.paper}>*/}
-            {/*    Links*/}
-            {/*</Typography>*/}
             <TableContainer component={Paper} className={classes.paper}>
                 <Table aria-label="simple table">
                     <TableBody>
@@ -47,34 +44,24 @@ const CloneDetail = ({clone}) => {
                                     {"Service"}
                                 </TableCell>
                                 <TableCell align="left">
-                                    {clone.msService && <CloneLink link={clone.msService.msId.path} heading={"p"}/>}
+                                    {clone.msService && <CloneLink link={clone.msService.msId.path} heading={"p"}/>} <span>({clone.msServiceMethod.line})</span>
                                 </TableCell>
                             </TableRow>
                         }
-                        {/*<TableRow key={3}>*/}
-                        {/*    <TableCell component="th" scope="row">*/}
-                        {/*        {"Repository"}*/}
-                        {/*    </TableCell>*/}
-                        {/*    <TableCell align="left">*/}
 
-                        {/*    </TableCell>*/}
-                        {/*</TableRow>*/}
+                        {clone.msRepository && clone.msRepositoryMethod &&
+                        <TableRow key={2}>
+                            <TableCell component="th" scope="row">
+                                {"Repository"}
+                            </TableCell>
+                            <TableCell align="left">
+                                {clone.msRepository && <CloneLink link={clone.msRepository.msId.path} heading={"p"}/>} <span>({clone.msRepositoryMethod.line})</span>
+                            </TableCell>
+                        </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
-            {clone.msControllerMethod && clone.msControllerMethod.code &&
-            <div>
-                <CodeSnippet code={clone.msControllerMethod.code} language={'java'} showLineNumbers={false} />
-            </div>
-
-            }
-
-
-            {/*<Typography variant="h6" gutterBottom>*/}
-            {/*    Properties*/}
-            {/*</Typography>*/}
-
-            {/*<CloneDetailTable msClass={clone.msController} msMethod={clone.msControllerMethod} tableName={"Controller"}/>*/}
 
             <TableContainer component={Paper} className={classes.paper}>
                 <Table aria-label="properties table">
@@ -136,8 +123,14 @@ const CloneDetail = ({clone}) => {
                 </Table>
             </TableContainer>
 
+            {clone.msControllerMethod && clone.msControllerMethod.code &&
+            <div>
+                <CodeSnippet code={clone.msControllerMethod.code} language={'java'} showLineNumbers={false} />
+            </div>
+            }
+
             {clone.msServiceMethod &&
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} className={classes.paper}>
                 <Table aria-label="properties table">
                     <TableBody>
                         <TableRow key={99}>
@@ -212,6 +205,96 @@ const CloneDetail = ({clone}) => {
                 </Table>
             </TableContainer>
             }
+
+            {clone.msServiceMethod && clone.msServiceMethod.code &&
+            <div>
+                <CodeSnippet code={clone.msServiceMethod.code} language={'java'} showLineNumbers={false} />
+            </div>
+            }
+
+            {clone.msRepositoryMethod &&
+            <TableContainer component={Paper} className={classes.paper}>
+                <Table aria-label="properties table">
+                    <TableBody>
+                        <TableRow key={99}>
+                            <TableCell component="th" scope="row">
+                                <b>{"Repository"}</b>
+                            </TableCell>
+                            <TableCell align="left">
+
+                            </TableCell>
+                        </TableRow>
+                        <TableRow key={100}>
+                            <TableCell component="th" scope="row">
+                                {"Return Type"}
+                            </TableCell>
+                            <TableCell align="left">
+                                {clone.msRepositoryMethod && clone.msRepositoryMethod.returnType}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow key={101}>
+                            <TableCell component="th" scope="row">
+                                {"Class Name"}
+                            </TableCell>
+                            <TableCell align="left">
+                                {clone.msRepositoryMethod && clone.msRepositoryMethod.className}
+                            </TableCell>
+                        </TableRow>
+
+                        <TableRow key={102}>
+                            <TableCell component="th" scope="row">
+                                {"Method Name"}
+                            </TableCell>
+                            <TableCell align="left">
+                                {clone.msRepositoryMethod && clone.msRepositoryMethod.methodName}
+                            </TableCell>
+                        </TableRow>
+                        {clone.msRepositoryMethod && clone.msRepositoryMethod.msArgumentList.map((n) => (
+                            <TableRow key={102}>
+                                <TableCell component="th" scope="row">
+                                    {"Argument"}
+                                </TableCell>
+                                <TableCell align="left">
+                                    {n.returnType}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+
+                        {clone.msServiceMethod && clone.msServiceMethod.msAnnotations.map((n) => {
+                            let isKey = n.key ? true : false;
+                            return (
+                                <TableRow key={102}>
+                                    <TableCell component="th" scope="row">
+                                        {"Annotation"}
+                                    </TableCell>
+                                    {isKey && (
+                                        <TableCell align="left">
+                                            @{n.annotationName}({n.key}={n.value})
+                                        </TableCell>
+                                    )}
+
+                                    {!isKey && (
+                                        <TableCell align="left">
+                                            @{n.annotationName}
+                                        </TableCell>
+                                    )}
+
+                                </TableRow>
+                            )
+                        })}
+
+
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            }
+
+            {clone.msRepositoryMethod && clone.msRepositoryMethod.code &&
+            <div>
+                <CodeSnippet code={clone.msRepositoryMethod.code} language={'java'} showLineNumbers={false} />
+            </div>
+            }
+
         </div>
     );
 }
