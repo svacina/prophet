@@ -2,6 +2,8 @@
 
 This project detect semantic code clones in enterprise applications.
 
+Please see the [demonstration video](https://drive.google.com/file/d/10EKdYaOfS2NvKCKvSS-HSCxeBDl2UZjC/view?usp=sharing)
+
 ## Prerequisites
 
 * Maven 3.6+
